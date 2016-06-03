@@ -30,8 +30,8 @@ class VisualRecognition:
     files = {
       'name': (None, classifier_name),
       tag_name + '_positive_examples': (pos_file,
-                                          open(pos_file, 'rb').read(),
-                                          'application/zip'),
+                                        open(pos_file, 'rb').read(),
+                                        'application/zip'),
       'negative_examples': (neg_file,
                             open(neg_file, 'rb').read(),
                             'application/zip')
@@ -67,7 +67,7 @@ class VisualRecognition:
     }
 
     files = {
-      'parameters': json.dumps(parameters),
+      'parameters': (None, json.dumps(parameters)),
       'images_file': (image_file,
                       open(image_file, 'rb').read(),
                       'image/jpg')
@@ -93,7 +93,7 @@ def main():
   print vr.list_classifiers()
   
   vr = VisualRecognition(api_key)
-  pprint(vr.classify_image('default', 'bundles/dogs/test/0.jpg'))
+  pprint(vr.classify_image('beagle_81816899', 'bundles/dogs/test/0.jpg'))
   #pprint(vr.classify_image('default', 'bundles/dogs/test/0.jpg'))
 if __name__ == "__main__":
     main()
