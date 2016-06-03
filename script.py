@@ -63,7 +63,8 @@ class VisualRecognition:
     params = {'api_key': self.api_key, 'version': self.version}
 
     parameters = {
-      'classifier_ids':[classifier_id]
+      'classifier_ids':[classifier_id],
+      'threshold': 0
     }
 
     files = {
@@ -93,7 +94,7 @@ def main():
   print vr.list_classifiers()
   
   vr = VisualRecognition(api_key)
-  pprint(vr.classify_image('beagle_81816899', 'bundles/dogs/test/0.jpg'))
+  pprint(vr.classify_image('beagle_81816899', 'bundles/dogs/test/4.jpg'))
   #pprint(vr.classify_image('default', 'bundles/dogs/test/0.jpg'))
 if __name__ == "__main__":
     main()
