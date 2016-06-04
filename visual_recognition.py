@@ -33,11 +33,11 @@ class VisualRecognition:
     else:
       if isinstance(tag_names, list) and isinstance(pos_files, list):
         if len(tag_names) != len(pos_files):
-          raise ValueError("Number of tags and number of example files do not match.")
+          raise ValueError("Number of tags and number of pos example files do not match.")
         if len(tag_names) != len(set(tag_names)): #allow duplicates in example files
           raise ValueError("Duplicates not allowed in tag names") 
       else:
-        raise ValueError("Tags and positive examples need to be string or lists.")
+        raise TypeError("Tags and pos example files need to be both strings or lists.")
 
     files = {
       'name': (None, classifier_name),
@@ -72,12 +72,18 @@ class VisualRecognition:
 
     return responses
 
-  def classify_image(self, classifier_id, image_file):
+  def classify_image(self, classifier_ids, image_file):
     url = '/v3/classify'
     params = {'api_key': self.api_key, 'version': self.version}
 
+    if isinstance(classifier_ids, str):
+      classifier_ids = [classifier_ids]
+    else:
+      if not isinstance(classifier_ids, list):
+        raise TypeError("classifier_ids needs to be either string or list.")
+
     parameters = {
-      'classifier_ids':[classifier_id],
+      'classifier_ids': classifier_ids,
       'threshold': 0
     }
 
@@ -99,17 +105,25 @@ def main():
 
   vr = VisualRecognition(api_key)
   
+  #Single Classifier
   pos_file = 'bundles/dogs/beagle.zip'
   neg_file = 'bundles/dogs/negatives.zip'
-  response = vr.create_classifier('beagle','beagle', pos_file, neg_file)
-  #response = vr.delete_classifier('beagle_classifier_1962805094')
+  #response = vr.create_classifier('beagle','beagle', pos_file, neg_file)
+
+  #Multi Classifier
+  tag_names = ['beagle', 'dalmation', 'golden_retriever','husky']
+  pos_files = ['bundles/dogs/beagle.zip', 'bundles/dogs/dalmation.zip', 
+               'bundles/dogs/goldenretriever.zip', 'bundles/dogs/husky.zip']
+  #response = vr.create_classifier('dogs',tag_names, pos_files, neg_file)
+
   #print response
 
-  print vr.list_classifiers()
-  
-  vr = VisualRecognition(api_key)
-  pprint(vr.classify_image('beagle_81816899', 'bundles/dogs/test/4.jpg'))
+  pprint(vr.list_classifiers())
+  print('')
+  pprint(vr.classify_image(['dogs_2117373684','beagle_81816899'], 'bundles/dogs/test/5.jpg'))
   #pprint(vr.classify_image('default', 'bundles/dogs/test/0.jpg'))
+
+  #response = vr.delete_classifier('beagle_classifier_1962805094')
 if __name__ == "__main__":
     main()
 
