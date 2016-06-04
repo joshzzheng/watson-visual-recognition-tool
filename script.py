@@ -23,19 +23,33 @@ class VisualRecognition:
     return requests.get(self.end_point + url, 
                         params=params).json()['classifiers']
 
-  def create_classifier(self, classifier_name, tag_name, pos_file, neg_file):
+  def create_classifier(self, classifier_name, tag_names, pos_files, neg_file):
     url = '/v3/classifiers'
     params = {'api_key': self.api_key, 'version': self.version}
 
+    if isinstance(tag_names, str) and isinstance(pos_files, str):
+      tag_names = [tag_names]
+      pos_files = [pos_files]
+    else:
+      if isinstance(tag_names, list) and isinstance(pos_files, list):
+        if len(tag_names) != len(pos_files):
+          raise ValueError("Number of tags and number of example files do not match.")
+        if len(tag_names) != len(set(tag_names)): #allow duplicates in example files
+          raise ValueError("Duplicates not allowed in tag names") 
+      else:
+        raise ValueError("Tags and positive examples need to be string or lists.")
+
     files = {
       'name': (None, classifier_name),
-      tag_name + '_positive_examples': (pos_file,
-                                        open(pos_file, 'rb').read(),
-                                        'application/zip'),
       'negative_examples': (neg_file,
                             open(neg_file, 'rb').read(),
                             'application/zip')
     }
+
+    for i, tag in enumerate(tag_names):
+      files[tag + '_positive_examples'] = (pos_files[i],
+                                        open(pos_files[i], 'rb').read(),
+                                        'application/zip')
 
     return requests.post(self.end_point + url,
                          files=files,
@@ -87,7 +101,7 @@ def main():
   
   pos_file = 'bundles/dogs/beagle.zip'
   neg_file = 'bundles/dogs/negatives.zip'
-  #response = vr.create_classifier('beagle','beagle', pos_file, neg_file)
+  response = vr.create_classifier('beagle','beagle', pos_file, neg_file)
   #response = vr.delete_classifier('beagle_classifier_1962805094')
   #print response
 
