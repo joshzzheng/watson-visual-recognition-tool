@@ -1,6 +1,8 @@
 .DS_Store
 .env
 bundles/
+settings.py
+curl_commands
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
