@@ -14,10 +14,14 @@ class WatsonVisualRecognition:
 
   def list_classifiers(self):
     url = '/v3/classifiers'
-    params = {'api_key': self.api_key, 'version':self.version}
+    params = {'api_key': self.api_key, 'version': self.version}
 
     return requests.get(self.end_point + url, 
                         params=params).json()['classifiers']
+
+  def get_classifier(self, classifier_id):
+    url = '/v3/classifers'
+    params = {'api_key': self.api_key, 'version': self.version}
 
   def create_classifier(self, classifier_name, class_names, pos_files, neg_file):
     url = '/v3/classifiers'
