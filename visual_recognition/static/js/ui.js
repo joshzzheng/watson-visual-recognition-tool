@@ -1,12 +1,23 @@
+var ClassList = React.createClass({
+  render: function(){
+    var classList = this.props.classes.map(function(name){
+      return <li>{name.class}</li>;
+    })
+    return <ul> {classList} </ul>
+  }
+})
+
 var CustomClassifier = React.createClass({
   render: function() {
-
-
+    var classDetail = DOG_CLASSISIFER;
     return(
       <div>
         <h3>Name: {this.props.name}</h3>
         <h4>Classifier ID: {this.props.classifierID}</h4>
         <h4>Status: {this.props.status}</h4>
+        <h5>Created On: {classDetail.created} </h5>
+        <h5>Owner: {classDetail.owner}</h5>
+        <h5>Classes: <ClassList classes={classDetail.classes} /></h5>
       </div>
     );
   }
