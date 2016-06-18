@@ -1,31 +1,49 @@
 var ClassList = React.createClass({
   render: function(){
     var classList = this.props.classes.map(function(name){
-      return <li>{name.class}</li>;
+      return <li className="list-group-item" key={name.class}>{name.class}</li>;
     })
-    return <ul> {classList} </ul>
+    return <ul className="list-group list-group-flush"> {classList} </ul>
   }
-})
+});
 
 var CustomClassifier = React.createClass({
   render: function() {
     var classDetail = DOG_CLASSISIFER;
+    var cardStyle = {
+      maxWidth: '20rem',
+    };
+
     return(
-      <div>
-        <h3>Name: {this.props.name}</h3>
-        <h4>Classifier ID: {this.props.classifierID}</h4>
-        <h4>Status: {this.props.status}</h4>
-        <h5>Created On: {classDetail.created} </h5>
-        <h5>Owner: {classDetail.owner}</h5>
-        <h5>Classes: <ClassList classes={classDetail.classes} /></h5>
+      <div className="card" style={cardStyle}>
+        <img className="card-img-top" data-src={"holder.js/348x180"} alt="Card image cap" />
+        <div className="card-block">
+          <h4 className="card-title">{this.props.name}</h4>
+          <p className="card-text">
+            <b>ID:</b> {this.props.classifierID} <br/>
+            <b>Status:</b> {this.props.status} <br/>
+            <b>Created:</b> {classDetail.created} <br/>
+            <b>Owner:</b> {classDetail.owner}
+          </p>          
+        </div>
+        <ClassList classes={classDetail.classes} />
+        <div className="card-block">
+          <a href="#" className="card-link">Card link</a>
+          <a href="#" className="card-link">Another link</a>
+        </div>
       </div>
+
     );
   }
-})
+});
 
 var CustomClassifiersList = React.createClass({
   render: function() {
     var classifiers = [];
+    var divStyle = {
+      maxWidth: '30%',
+    };
+
     this.props.classifiers.classifiers.forEach(function(classifier){
       classifiers.push(<CustomClassifier 
          classifierID={classifier.classifier_id}
@@ -35,8 +53,7 @@ var CustomClassifiersList = React.createClass({
     });
     return (
       <div>
-        <h2>Custom Classifiers</h2>
-        <div>{classifiers}</div>
+        <div className='card-deck'>{classifiers}</div>
       </div>
     );
   }
@@ -46,7 +63,7 @@ var CLASSIFIERS = {
   classifiers: [
       { classifier_id: 'beagle_874258552', name: 'beagle', status: 'ready' },
       { classifier_id: 'dogs_2117373684', name: 'dogs', status: 'ready' },
-      { classifier_id: 'beagle_81816899', name: 'beagle', status: 'ready' }
+      { classifier_id: 'goldenretriever_81816899', name: 'golden retriver', status: 'ready' }
   ]
 }
 
