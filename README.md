@@ -1,1 +1,0 @@
-# watson-visual-recognition-tool

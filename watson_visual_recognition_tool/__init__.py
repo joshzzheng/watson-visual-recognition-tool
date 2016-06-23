@@ -5,7 +5,7 @@ from flask import render_template, send_from_directory, url_for
 
 app = Flask(__name__)
 
-app.config.from_object('visual_recognition.settings')
+app.config.from_object('watson_visual_recognition_tool.settings')
 app.url_map.strict_slashes = False
 
-import visual_recognition.controllers
+import watson_visual_recognition_tool.controllers

@@ -1,0 +1,40 @@
+{
+  "name": "watson-visual-recognition-tool",
+  "version": "0.0.1",
+  "description": "A UI for Watson custom visual classifiers.",
+  "main": "app.js",
+  "scripts": {
+    "start": "webpack --progress --colors --watch",
+    "clean": "rm -rf lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Josh Zheng <joshzheng@us.ibm.com> (https://github.com/boxcarton)",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.2",
+    "bootstrap-loader": "^1.0.10",
+    "bootstrap-sass": "^3.3.6",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "imports-loader": "^0.6.5",
+    "jquery": "^3.0.0",
+    "moment": "^2.13.0",
+    "node-sass": "^3.8.0",
+    "postcss-loader": "^0.9.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "resolve-url-loader": "^1.4.4",
+    "sass-loader": "^3.2.1",
+    "style-loader": "^0.13.1",
+    "tether": "^1.3.2",
+    "url-loader": "^0.5.7"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "webpack": "*"
+  }
+}

@@ -1,5 +1,5 @@
 import os
-from visual_recognition import app
+from watson_visual_recognition_tool import app
 
 def runserver():
 	port = int(os.environ.get('PORT', 5000))
