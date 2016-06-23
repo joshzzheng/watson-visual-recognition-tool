@@ -9,7 +9,7 @@ module.exports = {
     './watson_visual_recognition_tool/static/js/app'
   ],
   output: {
-    path: './watson_visual_recognition_tool/static/js',
+    path: './watson_visual_recognition_tool/static/lib',
     filename: 'browser-bundle.js'
   },
   devtool: 'source-map',
