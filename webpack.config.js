@@ -1,9 +1,9 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const webpack = require('webpack');
+//const ExtractTextPlugin = require('extract-text-webpack-plugin');
+//const webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'tether',
+    //'tether',
     //'font-awesome-loader',
     'bootstrap-loader',
     './watson_visual_recognition_tool/static/js/app'
@@ -14,12 +14,12 @@ module.exports = {
   },
   devtool: 'source-map',
 
-  plugins: [
+  /*plugins: [
     new ExtractTextPlugin('app.css', { allChunks: true }),
     new webpack.ProvidePlugin({
       "window.Tether": "tether"
     }),
-  ],
+  ],*/
 
   module: {
     loaders: [
@@ -35,7 +35,7 @@ module.exports = {
       //{ test: /\.scss$/, loaders: [ 'style', 'css', 'postcss', 'sass' ] },
 
       // Bootstrap 4
-      { test: /bootstrap[\/\\]dist[\/\\]js[\/\\]umd[\/\\]/, loader: 'imports?jQuery=jquery' },
+      //{ test: /bootstrap[\/\\]dist[\/\\]js[\/\\]umd[\/\\]/, loader: 'imports?jQuery=jquery' },
     ]
   }
 };

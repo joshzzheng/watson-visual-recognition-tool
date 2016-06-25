@@ -111,14 +111,14 @@ styles:
 
 ### Bootstrap scripts
 scripts:
-  alert: true
-  button: true
-  carousel: true
-  collapse: true
-  dropdown: true
-  modal: true
-  popover: true
-  scrollspy: true
-  tab: true
-  tooltip: true
-  util: true
+  alert: false
+  button: false
+  carousel: false
+  collapse: false
+  dropdown: false
+  modal: false
+  popover: false
+  scrollspy: false
+  tab: false
+  tooltip: false
+  util: false

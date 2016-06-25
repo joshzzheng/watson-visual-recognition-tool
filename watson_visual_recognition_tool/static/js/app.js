@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require("jquery");
 var moment = require("moment");
+var Dropzone = require('react-dropzone');
 
 var ClassList = React.createClass({
   render: function(){
@@ -59,7 +60,7 @@ var CustomClassifier = React.createClass({
           <img className="card-img-top" 
                src='static/img/watson.jpg' 
                alt="Card image cap" 
-               style={imageStyle}/>
+               style={imageStyle} />
           <div className="card-block">
             <h4 className="card-title">{this.props.name}</h4>
             <p className="card-text">
@@ -125,11 +126,50 @@ var CustomClassifiersList = React.createClass({
   }
 });
 
+var DropzoneButton = React.createClass({
+  getInitialState: function () {
+    return {
+      files: [],
+      text: "Drag File Here or Click To Select"
+    };
+  },
+
+  onDrop: function (files) {
+    this.setState({
+      files: files,
+      text: files[0].name
+    });
+    console.log(this.state)
+    console.log('Received files: ', files);
+  },
+
+  onOpenClick: function () {
+    this.refs.dropzone.open();
+  },
+
+  render: function () {
+    
+    var dropzoneStyle = {
+      border: "dotted"
+    };
+
+    return (
+      <Dropzone ref="dropzone" 
+                onDrop={this.onDrop} 
+                multiple={false}
+                className="btn btn-secondary"
+                style={dropzoneStyle}> 
+        {this.state.text}
+      </Dropzone>
+    );
+  }
+});
+
+
 var CreateClassifier = React.createClass({
   getInitialState: function() {
     return {
       classiferName: '',
-
       author: '', 
       text: ''
     };
@@ -165,10 +205,7 @@ var CreateClassifier = React.createClass({
           <div className="col-sm-4">
             <input type="text" className="form-control" id="class2" placeholder="Golden Retrivers"/>
           </div>
-          <label className="file">
-            <input type="file" id="file2"/>
-            <span className="file-custom"></span>
-          </label>
+          <DropzoneButton />
         </div>
         
         <div className="form-group row">
@@ -193,17 +230,6 @@ var CreateClassifier = React.createClass({
           </label>
         </div>
         
-        <div className="form-group row">
-          <label htmlFor="class5" className="col-sm-2 form-control-label">Class 5</label>
-          <div className="col-sm-4">
-            <input type="text" className="form-control" id="className4" placeholder="Great Danes"/>
-          </div>
-          <label className="file">
-            <input type="file" id="file5"/>
-            <span className="file-custom"></span>
-          </label>
-        </div>
-
         <div className="form-group row">
           <label htmlFor="nagatives" className="col-sm-2 form-control-label">Negatives</label>
           <div className="col-sm-4">
