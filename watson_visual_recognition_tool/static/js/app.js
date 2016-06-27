@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var $ = require("jquery");
 var moment = require("moment");
 var Dropzone = require('react-dropzone');
+var request = require('superagent')
 
 var ClassList = React.createClass({
   render: function(){
@@ -137,10 +138,9 @@ var DropzoneButton = React.createClass({
   onDrop: function (files) {
     this.setState({
       files: files,
-      text: files[0].name
+      text: files[files.length-1].name
     });
-    console.log(this.state)
-    console.log('Received files: ', files);
+    this.props.addFile(files[files.length-1])
   },
 
   onOpenClick: function () {
@@ -148,7 +148,6 @@ var DropzoneButton = React.createClass({
   },
 
   render: function () {
-    
     var dropzoneStyle = {
       border: "dotted"
     };
@@ -165,14 +164,37 @@ var DropzoneButton = React.createClass({
   }
 });
 
-
 var CreateClassifier = React.createClass({
   getInitialState: function() {
     return {
       classiferName: '',
-      author: '', 
-      text: ''
+      classes: [
+        { label: 'Negatives', name: '', file: null}
+        { label: 'Class 1', namae: '', file: null}
+      ]
     };
+  },
+
+  handleClassifierNameChange: function(e){
+    this.setState({ classifierName: e.target.value })
+  },
+
+  handleClassNameChange: function(e){
+    this.setState({ className: e.target.value })
+  },
+
+  addFile: function(file) {
+    this.setState({ classFile: file})
+  },
+  
+  submitClassifier: function(e) {
+    e.preventDefault();
+    console.log(this.state.classFile)
+    var req = request.post(this.props.url);
+    req.attach(this.state.className, this.state.classFile);
+    req.end(function(err, res){
+      console.log(res);
+    });
   },
 
   render() {
@@ -181,59 +203,59 @@ var CreateClassifier = React.createClass({
     }
 
     return (
-
-      <form>
+      <form onSubmit={this.submitClassifier}>
         <div className="form-group row">
-          <label htmlFor="classifierName" className="col-sm-2 form-control-label">Classifer Name</label>
-          <div className="col-sm-5">
-            <input type="text" className="form-control" id="classifierName" placeholder="Dogs"/>
-          </div>
-        </div>
-        
-        <div className="form-group row">
-          <label htmlFor="class1" className="col-sm-2 form-control-label">Class 1</label>
-          <div className="col-sm-4">
-            <input type="text" className="form-control" id="class1" placeholder="Beagles"/>
-          </div>
-          <label className="btn btn-primary btn-file">
-              Browse... <input type="file" style={fileUploadStyle} />
+          <label className="col-sm-2 form-control-label">
+            Classifer Name
           </label>
+          <div className="col-sm-5">
+            <input type="text" 
+                   className="form-control" 
+                   value={this.state.classifierName}
+                   onChange={this.handleClassifierNameChange}
+                   placeholder="Dogs"/>
+          </div>
         </div>
         
         <div className="form-group row">
-          <label htmlFor="class2" className="col-sm-2 form-control-label">Class 2</label>
+          <label htmlFor="class1" 
+                 className="col-sm-2 form-control-label">
+            Class 1 
+          </label>
           <div className="col-sm-4">
-            <input type="text" className="form-control" id="class2" placeholder="Golden Retrivers"/>
+            <input type="text" 
+                   className="form-control"
+                   value={this.state.className}
+                   onChange={this.handleClassNameChange}
+                   placeholder="Beagles"/>
+          </div>
+          <DropzoneButton addFile={this.addFile}/>
+        </div>
+        
+        <div className="form-group row">
+          <label htmlFor="class2" 
+                 className="col-sm-2 form-control-label">
+            Class 2
+          </label>
+          <div className="col-sm-4">
+            <input type="text" 
+                   className="form-control" 
+                   id="class2" 
+                   placeholder="Golden Retrivers"/>
           </div>
           <DropzoneButton />
         </div>
-        
+            
         <div className="form-group row">
-          <label htmlFor="class3" className="col-sm-2 form-control-label">Class 3</label>
-          <div className="col-sm-4">
-            <input type="text" className="form-control" id="class1" placeholder="Poodles"/>
-          </div>
-          <label className="file">
-            <input type="file" id="file3"/>
-            <span className="file-custom"></span>
+          <label htmlFor="nagatives" 
+                 className="col-sm-2 form-control-label">
+            Negatives
           </label>
-        </div>
-        
-        <div className="form-group row">
-          <label htmlFor="class4" className="col-sm-2 form-control-label">Class 4</label>
           <div className="col-sm-4">
-            <input type="text" className="form-control" id="className3" placeholder="Huskies"/>
-          </div>
-          <label className="file">
-            <input type="file" id="file4"/>
-            <span className="file-custom"></span>
-          </label>
-        </div>
-        
-        <div className="form-group row">
-          <label htmlFor="nagatives" className="col-sm-2 form-control-label">Negatives</label>
-          <div className="col-sm-4">
-            <input type="text" className="form-control" id="className5" placeholder="Cats"/>
+            <input type="text" 
+                   className="form-control"
+                   id="className5" 
+                   placeholder="Cats"/>
           </div>
           <label className="file">
             <input type="file" id="fileNegative"/>
@@ -242,12 +264,13 @@ var CreateClassifier = React.createClass({
         </div>
 
         <div className="form-group row">
-          <div className="col-sm-offset-2 col-sm-5">
-            <button type="submit" className="btn btn-success">Create Classifier</button>
+          <div className="col-sm-offset-2 col-sm-1">
+            <input className="btn btn-success" 
+                   type="submit" 
+                   value="Create Classifer" />
           </div>
         </div>
       </form>
-
     );
   }
 })

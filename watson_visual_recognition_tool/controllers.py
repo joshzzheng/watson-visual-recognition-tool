@@ -19,11 +19,19 @@ def index(**kwargs):
 def get_custom_classifiers():
   classifiers = visual_recognition.list_classifiers()['classifiers']
   return jsonify(classifiers), 200
-    
+
 @app.route('/api/classifier/<id>', methods=['GET'])
 def get_custom_classifier_detail(id):
   classifier = visual_recognition.get_classifier(id)
   return jsonify(classifier), 200
+
+@app.route('/api/classifiers', methods=['POST'])
+def create_custom_classifier():
+  
+  for name, file in request.files.iteritems():
+  	print name, file
+  
+  return jsonify(request.json), 200
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')
