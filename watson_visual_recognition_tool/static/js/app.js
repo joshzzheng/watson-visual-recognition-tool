@@ -169,7 +169,7 @@ var CreateClassifier = React.createClass({
     return {
       classiferName: '',
       classes: [
-        { label: 'Negatives', name: '', file: null}
+        { label: 'Negatives', name: '', file: null},
         { label: 'Class 1', namae: '', file: null}
       ]
     };
@@ -247,20 +247,10 @@ var CreateClassifier = React.createClass({
         </div>
             
         <div className="form-group row">
-          <label htmlFor="nagatives" 
-                 className="col-sm-2 form-control-label">
-            Negatives
+          <label className="col-sm-2 form-control-label">
+            Negative (Optional if multi-class)
           </label>
-          <div className="col-sm-4">
-            <input type="text" 
-                   className="form-control"
-                   id="className5" 
-                   placeholder="Cats"/>
-          </div>
-          <label className="file">
-            <input type="file" id="fileNegative"/>
-            <span className="file-custom"></span>
-          </label>
+          <DropzoneButton />
         </div>
 
         <div className="form-group row">
