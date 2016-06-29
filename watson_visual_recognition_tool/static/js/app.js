@@ -8,9 +8,15 @@ var request = require('superagent')
 var ClassList = React.createClass({
   render: function(){
     var classList = this.props.classes.map(function(name){
-      return <li className="list-group-item" key={name.class}>{name.class}</li>;
+      return (
+        <li className="list-group-item" key={name.class}>
+          {name.class}
+        </li>
+      );
     })
-    return <ul className="list-group list-group-flush"> {classList} </ul>
+    return (
+      <ul className="list-group list-group-flush"> {classList} </ul>
+    );
   }
 });
 
@@ -53,7 +59,8 @@ var CustomClassifier = React.createClass({
       height: 'auto'
     }
 
-    var date = moment(this.state.classifier.created).format("MMMM Do YYYY, h:mm a")
+    var date = moment(this.state.classifier.created)
+                .format("MMMM Do YYYY, h:mm a")
 
     return(
       <div className="col-sm-6 col-md-4 col-lg-3">
@@ -73,7 +80,8 @@ var CustomClassifier = React.createClass({
           </div>
           <ClassList classes={this.state.classifier.classes} />
           <div className="card-block">
-            <a href="#" className="btn btn-primary btn-sm" style={buttonStyle}>Classify Image</a>
+            <a href="#" className="btn btn-primary btn-sm" style={buttonStyle}>
+              Classify Image</a>
             <a href="#" className="btn btn-danger btn-sm">Delete</a>
           </div>
         </div>
@@ -140,7 +148,9 @@ var DropzoneButton = React.createClass({
       files: files,
       text: files[files.length-1].name
     });
-    this.props.addFile(files[files.length-1])
+    this.props.addFile(this.props.classes, 
+                       this.props.rowId, 
+                       files[files.length-1])
   },
 
   onOpenClick: function () {
@@ -164,13 +174,47 @@ var DropzoneButton = React.createClass({
   }
 });
 
+var ClassRow = React.createClass({
+  getInitialState: function() {
+    return {
+      id: this.props.rowId,
+      label: this.props.classes[this.props.rowId].label,
+      name: this.props.classes[this.props.rowId].name,
+      file: null 
+    };
+  },
+
+  handleRowClassNameChange: function(e) {
+    this.props.handleClassNameChange(e, this.props.classes, this.props.rowId)
+  },
+  
+  render: function() {
+    return (
+      <div className="form-group row">
+        <label className="col-sm-2 form-control-label">
+          {this.state.label}
+        </label>
+        <div className="col-sm-4">
+          <input type="text" 
+                 className="form-control"
+                 value={this.props.name}
+                 onChange={this.handleRowClassNameChange} />
+        </div>
+        <DropzoneButton rowId={this.props.rowId}
+                        classes={this.props.classes}
+                        addFile={this.props.addFile} />
+      </div>
+    )
+  }
+})
+
 var CreateClassifier = React.createClass({
   getInitialState: function() {
     return {
-      classiferName: '',
+      classifierName: "",
       classes: [
-        { label: 'Negatives', name: '', file: null},
-        { label: 'Class 1', namae: '', file: null}
+        {label: "Negatives", name: "negatives", file: null},
+        {label: "Class 1", name: "", file: null}
       ]
     };
   },
@@ -179,17 +223,33 @@ var CreateClassifier = React.createClass({
     this.setState({ classifierName: e.target.value })
   },
 
-  handleClassNameChange: function(e){
-    this.setState({ className: e.target.value })
+  handleClassNameChange: function(e, classes, rowId) {
+    var newClasses = $.extend([], classes);
+    newClasses[rowId].name = e.target.value;
+    this.setState({ classes: newClasses });
   },
 
-  addFile: function(file) {
-    this.setState({ classFile: file})
+  addFile: function(classes, rowId, file) {
+    var newClasses = $.extend([], classes);
+    newClasses[rowId].file = file;
+    this.setState({ classes: newClasses });
+    console.log(this.state);
   },
-  
+
+  addNewClass: function(e) {
+    e.preventDefault();
+    var newClasses = $.extend([], this.state.classes);
+    newClasses.push({
+      label: "Class " + this.state.classes.length.toString(),
+      name: "",
+      file: null
+    });
+    this.setState({classes: newClasses});
+  },
+
   submitClassifier: function(e) {
     e.preventDefault();
-    console.log(this.state.classFile)
+    console.log("HERE");
     var req = request.post(this.props.url);
     req.attach(this.state.className, this.state.classFile);
     req.end(function(err, res){
@@ -202,6 +262,17 @@ var CreateClassifier = React.createClass({
       display: 'none'
     }
 
+    var self = this;
+    var classRowList = this.state.classes.map(function(r, i){
+      return (
+        <ClassRow classes={self.state.classes} 
+                  addFile={self.addFile}
+                  handleClassNameChange={self.handleClassNameChange}
+                  rowId={i} 
+                  key={i} />
+      )
+    });
+
     return (
       <form onSubmit={this.submitClassifier}>
         <div className="form-group row">
@@ -211,56 +282,27 @@ var CreateClassifier = React.createClass({
           <div className="col-sm-5">
             <input type="text" 
                    className="form-control" 
-                   value={this.state.classifierName}
+                   value={this.state.classifierName || ""}
                    onChange={this.handleClassifierNameChange}
                    placeholder="Dogs"/>
           </div>
         </div>
         
-        <div className="form-group row">
-          <label htmlFor="class1" 
-                 className="col-sm-2 form-control-label">
-            Class 1 
-          </label>
-          <div className="col-sm-4">
-            <input type="text" 
-                   className="form-control"
-                   value={this.state.className}
-                   onChange={this.handleClassNameChange}
-                   placeholder="Beagles"/>
-          </div>
-          <DropzoneButton addFile={this.addFile}/>
-        </div>
+        {classRowList}
+        <button className="btn btn-primary"
+                onClick={this.addNewClass}>
+          Add Class
+        </button>
         
         <div className="form-group row">
-          <label htmlFor="class2" 
-                 className="col-sm-2 form-control-label">
-            Class 2
-          </label>
-          <div className="col-sm-4">
-            <input type="text" 
-                   className="form-control" 
-                   id="class2" 
-                   placeholder="Golden Retrivers"/>
-          </div>
-          <DropzoneButton />
-        </div>
-            
-        <div className="form-group row">
-          <label className="col-sm-2 form-control-label">
-            Negative (Optional if multi-class)
-          </label>
-          <DropzoneButton />
-        </div>
-
-        <div className="form-group row">
-          <div className="col-sm-offset-2 col-sm-1">
+          <div className="col-sm-offset-2 col-sm-5">
             <input className="btn btn-success" 
                    type="submit" 
                    value="Create Classifer" />
           </div>
         </div>
       </form>
+
     );
   }
 })
@@ -311,18 +353,25 @@ render: function() {
         </ButtonGroup>
       </div>);
 }});
-ReactDOM.render(<MyReactBootstrapButton />, document.getElementById("custom-classes"));
+ReactDOM.render(<MyReactBootstrapButton />, 
+  document.getElementById("custom-classes"));
 */
 
 /*
 var CLASSIFIERS = {
   classifiers: [
-      { classifier_id: 'beagle_874258552', name: 'beagle', status: 'ready' },
-      { classifier_id: 'dogs_2117373684', name: 'dogs', status: 'ready' },
-      { classifier_id: 'goldenretriever_81816899', name: 'golden retriver', status: 'ready' },
-      { classifier_id: 'pug_81816899', name: 'pug', status: 'ready' },
-      { classifier_id: 'great_dane_816899', name: 'great dane', status: 'ready' },
-      { classifier_id: 'german_shepard_16899', name: 'german shephard', status: 'ready' }
+    { classifier_id: 'beagle_874258552', 
+      name: 'beagle', status: 'ready' },
+    { classifier_id: 'dogs_2117373684', 
+      name: 'dogs', status: 'ready' },
+    { classifier_id: 'goldenretriever_81816899', 
+      name: 'golden retriver', status: 'ready' },
+    { classifier_id: 'pug_81816899', 
+      name: 'pug', status: 'ready' },
+    { classifier_id: 'great_dane_816899', 
+      name: 'great dane', status: 'ready' },
+    { classifier_id: 'german_shepard_16899', 
+      name: 'german shephard', status: 'ready' }
   ]
 }
 
