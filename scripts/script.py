@@ -1,16 +1,16 @@
 import os
-#from app.visual_recognition import VisualRecognition
+from watson_visual_recognition_tool.watson_visual_recognition import VisualRecognition
 from dotenv import load_dotenv
 from pprint import pprint
-from watson_developer_cloud import VisualRecognitionV3
+#from watson_developer_cloud import VisualRecognitionV3
 
 def main():
   load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
   api_key=os.environ.get("API_KEY")
 
-  #my_vr = VisualRecognition(api_key)
+  visual_recognition = VisualRecognition(api_key)
 
-  visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
+  #visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
   classes = visual_recognition.list_classifiers()
   pprint(classes)
 

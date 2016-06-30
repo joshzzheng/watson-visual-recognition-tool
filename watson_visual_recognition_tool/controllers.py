@@ -28,8 +28,12 @@ def get_custom_classifier_detail(id):
 @app.route('/api/classifiers', methods=['POST'])
 def create_custom_classifier():
   
+  files = {}
   for name, file in request.files.iteritems():
-  	print name, file
+    print name, file
+    files['name'] = file
+    
+  
   
   return jsonify(request.json), 200
 

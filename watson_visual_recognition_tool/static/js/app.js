@@ -177,10 +177,6 @@ var DropzoneButton = React.createClass({
 var ClassRow = React.createClass({
   getInitialState: function() {
     return {
-      id: this.props.rowId,
-      label: this.props.classes[this.props.rowId].label,
-      name: this.props.classes[this.props.rowId].name,
-      file: null 
     };
   },
 
@@ -192,13 +188,14 @@ var ClassRow = React.createClass({
     return (
       <div className="form-group row">
         <label className="col-sm-2 form-control-label">
-          {this.state.label}
+          {this.props.classes[this.props.rowId].label}
         </label>
         <div className="col-sm-4">
           <input type="text" 
                  className="form-control"
-                 value={this.props.name}
-                 onChange={this.handleRowClassNameChange} />
+                 value={this.props.classes[this.props.rowId].name}
+                 onChange={this.handleRowClassNameChange}
+                 disabled={this.props.classes[this.props.rowId].disabled} />
         </div>
         <DropzoneButton rowId={this.props.rowId}
                         classes={this.props.classes}
@@ -213,8 +210,8 @@ var CreateClassifier = React.createClass({
     return {
       classifierName: "",
       classes: [
-        {label: "Negatives", name: "negatives", file: null},
-        {label: "Class 1", name: "", file: null}
+        {label: "Negatives", name: "negative", file: null, disabled: true},
+        {label: "Class 1", name: "", file: null, disabled: false}
       ]
     };
   },
@@ -242,16 +239,22 @@ var CreateClassifier = React.createClass({
     newClasses.push({
       label: "Class " + this.state.classes.length.toString(),
       name: "",
-      file: null
+      file: null,
+      disabled: false
     });
     this.setState({classes: newClasses});
   },
 
   submitClassifier: function(e) {
     e.preventDefault();
-    console.log("HERE");
+    console.log(this.state.classes);
+
     var req = request.post(this.props.url);
-    req.attach(this.state.className, this.state.classFile);
+    
+    this.state.classes.map(function(c){
+      req.attach(c.name, c.file);
+    });
+    
     req.end(function(err, res){
       console.log(res);
     });
@@ -268,7 +271,7 @@ var CreateClassifier = React.createClass({
         <ClassRow classes={self.state.classes} 
                   addFile={self.addFile}
                   handleClassNameChange={self.handleClassNameChange}
-                  rowId={i} 
+                  rowId={i}
                   key={i} />
       )
     });
@@ -283,8 +286,7 @@ var CreateClassifier = React.createClass({
             <input type="text" 
                    className="form-control" 
                    value={this.state.classifierName || ""}
-                   onChange={this.handleClassifierNameChange}
-                   placeholder="Dogs"/>
+                   onChange={this.handleClassifierNameChange} />
           </div>
         </div>
         
