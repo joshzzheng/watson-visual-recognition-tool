@@ -247,14 +247,15 @@ var CreateClassifier = React.createClass({
 
   submitClassifier: function(e) {
     e.preventDefault();
-    
 
     var req = request.post(this.props.url);
-    req.send({classifier_name: this.state.classifierName})
+    
     this.state.classes.map(function(c){
       req.attach(c.name, c.file);
     });
-    console.log(req);
+
+    req.field('classifier_name', this.state.classifierName);
+    console.log(req)
     req.end(function(err, res){
       console.log(res);
     });
@@ -313,7 +314,7 @@ var ClassifierTools = React.createClass({
   render: function() {
     return (
       <div>
-        <CreateClassifier url="api/classifiers" />
+        <CreateClassifier url="/api/classifiers" />
         <hr />
         <h4>Your Classifiers</h4>
         <hr />

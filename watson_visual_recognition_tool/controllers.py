@@ -27,17 +27,17 @@ def get_custom_classifier_detail(id):
 
 @app.route('/api/classifiers', methods=['POST'])
 def create_custom_classifier():
-  classifier_name = request.json['classifier_name']
-  files = {}
+  classifier_name = request.form['classifier_name']
+  attached_files = {}
   for name, file in request.files.iteritems():
     if name == 'negative':
-      file['negative_examples'] = file
+      attached_files['negative_examples'] = file
     else:
-      files[name + '_positive_examples'] = file
+      attached_files[name + '_positive_examples'] = file
 
-  new_classifier = visual_recognition.create_classifier(classifier_name, files)
-  import pdb;pdb.set_trace()
-  return jsonify(new_classifier.json), new_classifier.status_code
+  new_classifier = visual_recognition.create_classifier(classifier_name, **attached_files)
+
+  return jsonify(new_classifier), jsonify(new_classifier).status_code
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')
