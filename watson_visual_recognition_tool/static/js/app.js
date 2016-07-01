@@ -247,14 +247,14 @@ var CreateClassifier = React.createClass({
 
   submitClassifier: function(e) {
     e.preventDefault();
-    console.log(this.state.classes);
+    
 
     var req = request.post(this.props.url);
-    
+    req.send({classifier_name: this.state.classifierName})
     this.state.classes.map(function(c){
       req.attach(c.name, c.file);
     });
-    
+    console.log(req);
     req.end(function(err, res){
       console.log(res);
     });
