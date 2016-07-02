@@ -18,12 +18,14 @@ def index(**kwargs):
 @app.route('/api/classifiers', methods=['GET'])
 def get_custom_classifiers():
   classifiers = visual_recognition.list_classifiers()['classifiers']
-  return jsonify(classifiers), 200
+  response = jsonify(classifiers)
+  return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['GET'])
 def get_custom_classifier_detail(id):
   classifier = visual_recognition.get_classifier(id)
-  return jsonify(classifier), 200
+  response = jsonify(classifier)
+  return response, response.status_code
 
 @app.route('/api/classifiers', methods=['POST'])
 def create_custom_classifier():
@@ -36,8 +38,14 @@ def create_custom_classifier():
       attached_files[name + '_positive_examples'] = file
 
   new_classifier = visual_recognition.create_classifier(classifier_name, **attached_files)
+  response = jsonify(new_classifier)
+  return response, response.status_code
 
-  return jsonify(new_classifier), jsonify(new_classifier).status_code
+@app.route('/api/classifier/<id>', methods=['DELETE'])
+def delete_custom_classifier(id):
+  response = visual_recognition.delete_classifier(id)
+  response = jsonify(response)
+  return response, response.status_code
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')

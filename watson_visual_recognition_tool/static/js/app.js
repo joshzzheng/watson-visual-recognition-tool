@@ -47,6 +47,13 @@ var CustomClassifier = React.createClass({
     setInterval(this.loadClassifierFromServer, this.props.pollInterval);
   },
 
+  deleteClassifier: function(){
+    var req = request.delete(this.props.url);
+    req.end(function(err, res){
+      console.log(res);
+    });
+  },
+
   render: function() {
     var cardStyle = {
       maxWidth: '20rem',
@@ -82,7 +89,10 @@ var CustomClassifier = React.createClass({
           <div className="card-block">
             <a href="#" className="btn btn-primary btn-sm" style={buttonStyle}>
               Classify Image</a>
-            <a href="#" className="btn btn-danger btn-sm">Delete</a>
+            <a href="#" 
+               className="btn btn-danger btn-sm"
+               onClick={this.deleteClassifier}>
+              Delete</a>
           </div>
         </div>
       </div>
@@ -247,7 +257,6 @@ var CreateClassifier = React.createClass({
 
   submitClassifier: function(e) {
     e.preventDefault();
-
     var req = request.post(this.props.url);
     
     this.state.classes.map(function(c){
