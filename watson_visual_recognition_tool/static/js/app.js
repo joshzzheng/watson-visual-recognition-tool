@@ -37,8 +37,9 @@ var CustomClassifier = React.createClass({
   },
   
   getInitialState: function() {
-    return {classifier: {
-      classes: []
+    return {
+      classifier: {
+        classes: []
     }};
   },
 
