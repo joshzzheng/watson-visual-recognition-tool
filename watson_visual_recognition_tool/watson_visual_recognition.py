@@ -23,33 +23,18 @@ class WatsonVisualRecognition:
     url = '/v3/classifers'
     params = {'api_key': self.api_key, 'version': self.version}
 
-  def create_classifier(self, classifier_name, class_names, pos_files, neg_file):
+  def create_classifier(self, classifier_name, class_files):
     url = '/v3/classifiers'
     params = {'api_key': self.api_key, 'version': self.version}
 
-    if isinstance(class_names, str) and isinstance(pos_files, str):
-      class_names = [class_names]
-      pos_files = [pos_files]
-    else:
-      if isinstance(class_names, list) and isinstance(pos_files, list):
-        if len(class_names) != len(pos_files):
-          raise ValueError("Number of tags and number of pos example files do not match.")
-        if len(class_names) != len(set(class_names)): #allow duplicates in example files
-          raise ValueError("Duplicates not allowed in tag names") 
-      else:
-        raise TypeError("Tags and pos example files need to be both strings or lists.")
-
     files = {
-      'name': (None, classifier_name),
-      'negative_examples': (neg_file,
-                            open(neg_file, 'rb').read(),
-                            'application/zip')
+      'name': (None, classifier_name)
     }
 
-    for i, tag in enumerate(class_names):
-      files[tag + '_positive_examples'] = (pos_files[i],
-                                        open(pos_files[i], 'rb').read(),
-                                        'application/zip')
+    for class_name, file in class_files.iteritems():
+      files[class_name] = (class_name + ".zip",
+                           file,
+                           'application/zip')
 
     return requests.post(self.end_point + url,
                          files=files,

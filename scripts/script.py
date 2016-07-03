@@ -4,6 +4,7 @@ from pprint import pprint
 from watson_developer_cloud import VisualRecognitionV3
 import json
 import requests
+import tempfile
 
 class WatsonVisualRecognition:
 
@@ -26,32 +27,42 @@ class WatsonVisualRecognition:
     url = '/v3/classifers'
     params = {'api_key': self.api_key, 'version': self.version}
 
-  def create_classifier(self, classifier_name, class_names, pos_files, neg_file):
+
+  def create_classifier_from_file(self, classifier_name, class_names, pos_files, neg_file=None):
     url = '/v3/classifiers'
     params = {'api_key': self.api_key, 'version': self.version}
 
-    if isinstance(class_names, str) and isinstance(pos_files, str):
-      class_names = [class_names]
-      pos_files = [pos_files]
-    else:
-      if isinstance(class_names, list) and isinstance(pos_files, list):
-        if len(class_names) != len(pos_files):
-          raise ValueError("Number of tags and number of pos example files do not match.")
-        if len(class_names) != len(set(class_names)): #allow duplicates in example files
-          raise ValueError("Duplicates not allowed in tag names") 
-      else:
-        raise TypeError("Tags and pos example files need to be both strings or lists.")
-
     files = {
       'name': (None, classifier_name),
-      'negative_examples': (neg_file,
-                            open(neg_file, 'rb').read(),
-                            'application/zip')
+
     }
 
+    if neg_file:
+      files['negative_examples'] = (neg_file,
+                            open(neg_file, 'rb').read(),
+                            'application/zip')
+
     for i, tag in enumerate(class_names):
-      files[tag + '_positive_examples'] = (pos_files[i],
-                                        open(pos_files[i], 'rb').read(),
+      files[tag + '_positive_examples'] = (tag+".zip",
+                                        pos_files[i],
+                                        'application/zip')
+
+    return requests.post(self.end_point + url,
+                         files=files,
+                         params=params,
+                        ).json()
+
+  def create_classifier(self, classifier_name, pos_files, neg_file=None):
+    url = '/v3/classifiers'
+    params = {'api_key': self.api_key, 'version': self.version}
+
+    files = {
+      'name': (None, classifier_name)
+    }
+
+    for name, file in pos_files.iteritems():
+      files[name + '_positive_examples'] = (name + ".zip",
+                                        file,
                                         'application/zip')
 
     return requests.post(self.end_point + url,
@@ -111,13 +122,15 @@ def main():
   sdk_visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
   my_vr = WatsonVisualRecognition(api_key)
   
-  journal = open('data/bundles/moleskine/journaling.zip')
-  land = open('data/bundles/moleskine/journaling.zip')
-  neg = open('data/bundles/moleskine/negative.zip')
 
-  pos_file_paths = ['data/bundles/moleskine/journaling.zip', 'data/bundles/moleskine/journaling.zip']
-  neg_file_path = 'data/bundles/moleskine/negative.zip'
-  pos_files = [journal, land]
+  journal = open('bundles/moleskine/journaling.zip').read()
+  land = open('bundles/moleskine/journaling.zip').read()
+  neg = open('bundles/moleskine/negative.zip').read()
+
+  pos_file_paths = ['bundles/moleskine/journaling.zip', 'bundles/moleskine/journaling.zip']
+  neg_file_path = 'bundles/moleskine/negative.zip'
+  pos_file_list = [journal, land]
+  pos_files = {'journ': journal, 'land': land}
   pos_names = ['journal', 'land']
 
   files = {
@@ -126,17 +139,18 @@ def main():
     'landscape_positive_examples': land
   }
 
-  response = my_vr.create_classifier("mol_script", pos_names, pos_file_paths, neg_file_path)
-  import pdb; pdb.set_trace()
-  
+  response = my_vr.create_classifier("mol_script_zipnew", files)
+  #response = my_vr.create_classifier_from_file("mol_script_file1", pos_names, pos_file_list, neg_file_path)
+  #import pdb; pdb.set_trace()
 
-  '''
-  classes = visual_recognition.list_classifiers()
+
+  '''  
+  classes = sdk_visual_recognition.list_classifiers()
   pprint(classes)
 
   print
   for c in classes['classifiers']:
-    info = visual_recognition.get_classifier(c['classifier_id'])
+    info = sdk_visual_recognition.get_classifier(c['classifier_id'])
     pprint(info)
     print
   '''

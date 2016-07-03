@@ -51,7 +51,7 @@ var CustomClassifier = React.createClass({
   deleteClassifier: function(){
     var req = request.delete(this.props.url);
     req.end(function(err, res){
-      console.log(res);
+      this.loadClassifierFromServer()
     });
   },
 
@@ -73,10 +73,6 @@ var CustomClassifier = React.createClass({
     return(
       <div className="col-sm-6 col-md-4 col-lg-3">
         <div className="card" style={cardStyle}>
-          <img className="card-img-top" 
-               src='static/img/watson.jpg' 
-               alt="Card image cap" 
-               style={imageStyle} />
           <div className="card-block">
             <h4 className="card-title">{this.props.name}</h4>
             <p className="card-text">
@@ -88,8 +84,11 @@ var CustomClassifier = React.createClass({
           </div>
           <ClassList classes={this.state.classifier.classes} />
           <div className="card-block">
-            <a href="#" className="btn btn-primary btn-sm" style={buttonStyle}>
+            <a className="btn btn-primary btn-sm" 
+               style={buttonStyle}>
               Classify Image</a>
+          </div>
+          <div className="card-block">
             <a href="#" 
                className="btn btn-danger btn-sm"
                onClick={this.deleteClassifier}>
