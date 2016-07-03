@@ -226,8 +226,18 @@ var CreateClassifier = React.createClass({
     };
   },
 
+  resetState: function() {
+    this.setState({
+      classifierName: "",
+      classes: [
+        {label: "Negatives", name: "negative", file: null, disabled: true},
+        {label: "Class 1", name: "", file: null, disabled: false}
+      ]
+    });
+  },
+
   handleClassifierNameChange: function(e){
-    this.setState({ classifierName: e.target.value })
+    this.setState({ classifierName: e.target.value });
   },
 
   handleClassNameChange: function(e, classes, rowId) {
@@ -255,8 +265,10 @@ var CreateClassifier = React.createClass({
     this.setState({classes: newClasses});
   },
 
+  
   submitClassifier: function(e) {
     e.preventDefault();
+    var self = this;
     var req = request.post(this.props.url);
     
     this.state.classes.map(function(c){
@@ -264,9 +276,9 @@ var CreateClassifier = React.createClass({
     });
 
     req.field('classifier_name', this.state.classifierName);
-    console.log(req)
     req.end(function(err, res){
       console.log(res);
+      self.resetState();
     });
   },
 
