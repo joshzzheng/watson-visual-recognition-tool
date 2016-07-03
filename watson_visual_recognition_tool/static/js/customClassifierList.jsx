@@ -1,6 +1,6 @@
 var React = require('react');
-var $ = require("jquery");
 var moment = require("moment");
+var $ = require("jquery");
 var ClassifyImage = require("./classifyImage")
 
 var ClassList = React.createClass({

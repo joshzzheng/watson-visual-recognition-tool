@@ -1,6 +1,7 @@
 var React = require('react');
 var Dropzone = require('react-dropzone');
-var request = require('superagent')
+var request = require('superagent');
+var $ = require("jquery");
 
 var DropzoneButton = React.createClass({
   getInitialState: function () {
