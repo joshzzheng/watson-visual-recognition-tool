@@ -6,7 +6,7 @@ module.exports = {
     //'tether',
     //'font-awesome-loader',
     'bootstrap-loader',
-    './watson_visual_recognition_tool/static/js/app'
+    './watson_visual_recognition_tool/static/js/app.jsx'
   ],
   output: {
     path: './watson_visual_recognition_tool/static/lib',
@@ -20,11 +20,14 @@ module.exports = {
       "window.Tether": "tether"
     }),
   ],*/
-
+  resolve:{
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
         //include: ['./watson_visual_recognition_tool/static/js'],
         query: {

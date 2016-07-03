@@ -45,14 +45,14 @@ def create_custom_classifier():
     else:
       files[name + '_positive_examples'] = tf
 
-  new_classifier = my_visual_recognition.create_classifier(classifier_name, files)
+  new_classifier = sdk_visual_recognition.create_classifier(classifier_name, files)
   response = jsonify(new_classifier)
   
   return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['DELETE'])
 def delete_custom_classifier(id):
-  response = sdk_visual_recognition.delete_classifier(id)
+  response = my_visual_recognition.delete_classifier(id)
   response = jsonify(response)
   return response, response.status_code
 

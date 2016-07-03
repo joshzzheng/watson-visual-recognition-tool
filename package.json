@@ -4,7 +4,7 @@
   "description": "A UI for Watson custom visual classifiers.",
   "main": "app.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch",
+    "start": "webpack --progress --display-error-details --colors --watch",
     "clean": "rm -rf watson_visual_recognition_tool/static/lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
