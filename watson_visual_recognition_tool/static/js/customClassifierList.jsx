@@ -1,6 +1,7 @@
 var React = require('react');
 var $ = require("jquery");
 var moment = require("moment");
+var ClassifyImage = require("./classifyImage")
 
 var ClassList = React.createClass({
   render: function(){
@@ -81,11 +82,7 @@ var CustomClassifier = React.createClass({
             </p>          
           </div>
           <ClassList classes={this.state.classifier.classes} />
-          <div className="card-block">
-            <a className="btn btn-primary btn-sm" 
-               style={buttonStyle}>
-              Classify Image</a>
-          </div>
+          <ClassifyImage />
           <div className="card-block">
             <a href="#" 
                className="btn btn-danger btn-sm"
