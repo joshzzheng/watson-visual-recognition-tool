@@ -49,7 +49,7 @@ var CustomClassifier = React.createClass({
   deleteClassifier: function(){
     var req = request.delete(this.props.url);
     var self = this;
-    req.end(function(err, res){
+    req.then(function(res, err){
       self.loadClassifierFromServer()
     });
   },
@@ -70,7 +70,7 @@ var CustomClassifier = React.createClass({
                 .format("MMMM Do YYYY, h:mm a")
 
     return(
-      <div className="col-sm-6 col-md-4 col-lg-3">
+      <div className="col-sm-6">
         <div className="card" style={cardStyle}>
           <div className="card-block">
             <h4 className="card-title">{this.props.name}</h4>
@@ -82,7 +82,8 @@ var CustomClassifier = React.createClass({
             </p>          
           </div>
           <ClassList classes={this.state.classifier.classes} />
-          <ClassifyImage />
+          <ClassifyImage url={'/api/classify'} 
+                         classifierID={this.props.classifierID}/>
           <div className="card-block">
             <a href="#" 
                className="btn btn-danger btn-sm"

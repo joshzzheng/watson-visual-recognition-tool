@@ -57,11 +57,11 @@ class WatsonVisualRecognition:
 
     return responses
 
-  def classify_image(self, classifier_ids, image_file):
+  def classify_image(self, classifier_ids, image_file=None, image_url="", threshold=0):
     url = '/v3/classify'
     params = {'api_key': self.api_key, 'version': self.version}
 
-    if isinstance(classifier_ids, str):
+    if isinstance(classifier_ids, str) or isinstance(classifier_ids, unicode):
       classifier_ids = [classifier_ids]
     else:
       if not isinstance(classifier_ids, list):
@@ -69,15 +69,16 @@ class WatsonVisualRecognition:
 
     parameters = {
       'classifier_ids': classifier_ids,
-      'threshold': 0
+      'threshold': threshold,
+      'url': image_url
     }
 
     files = {
       'parameters': (None, json.dumps(parameters)),
-      'images_file': (image_file,
-                      open(image_file, 'rb').read(),
-                      'image/jpg')
     }
+
+    if image_file:
+      files['images_file'] = (None, image_file, 'image/jpg')
 
     return requests.post(self.end_point + url,
                          files=files,

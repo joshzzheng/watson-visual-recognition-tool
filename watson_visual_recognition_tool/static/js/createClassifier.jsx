@@ -108,7 +108,6 @@ var CreateClassifier = React.createClass({
     var newClasses = $.extend([], classes);
     newClasses[rowId].file = file;
     this.setState({ classes: newClasses });
-    console.log(this.state);
   },
 
   addNewClass: function(e) {
@@ -123,7 +122,6 @@ var CreateClassifier = React.createClass({
     this.setState({classes: newClasses});
   },
 
-  
   submitClassifier: function(e) {
     e.preventDefault();
     var self = this;
@@ -134,8 +132,7 @@ var CreateClassifier = React.createClass({
     });
 
     req.field('classifier_name', this.state.classifierName);
-    req.end(function(err, res){
-      console.log(res);
+    req.then(function(res, err){
       self.resetState();
     });
   },

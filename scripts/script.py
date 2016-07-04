@@ -7,7 +7,6 @@ import requests
 import tempfile
 
 class WatsonVisualRecognition:
-
   end_point = "https://gateway-a.watsonplatform.net/visual-recognition/api"
   latest_version = '2016-05-20'
   
@@ -27,32 +26,7 @@ class WatsonVisualRecognition:
     url = '/v3/classifers'
     params = {'api_key': self.api_key, 'version': self.version}
 
-
-  def create_classifier_from_file(self, classifier_name, class_names, pos_files, neg_file=None):
-    url = '/v3/classifiers'
-    params = {'api_key': self.api_key, 'version': self.version}
-
-    files = {
-      'name': (None, classifier_name),
-
-    }
-
-    if neg_file:
-      files['negative_examples'] = (neg_file,
-                            open(neg_file, 'rb').read(),
-                            'application/zip')
-
-    for i, tag in enumerate(class_names):
-      files[tag + '_positive_examples'] = (tag+".zip",
-                                        pos_files[i],
-                                        'application/zip')
-
-    return requests.post(self.end_point + url,
-                         files=files,
-                         params=params,
-                        ).json()
-
-  def create_classifier(self, classifier_name, pos_files, neg_file=None):
+  def create_classifier(self, classifier_name, class_files):
     url = '/v3/classifiers'
     params = {'api_key': self.api_key, 'version': self.version}
 
@@ -60,10 +34,10 @@ class WatsonVisualRecognition:
       'name': (None, classifier_name)
     }
 
-    for name, file in pos_files.iteritems():
-      files[name + '_positive_examples'] = (name + ".zip",
-                                        file,
-                                        'application/zip')
+    for class_name, file in class_files.iteritems():
+      files[class_name] = (class_name + ".zip",
+                           file,
+                           'application/zip')
 
     return requests.post(self.end_point + url,
                          files=files,
@@ -86,11 +60,11 @@ class WatsonVisualRecognition:
 
     return responses
 
-  def classify_image(self, classifier_ids, image_file):
+  def classify_image(self, classifier_ids, image_file=None, image_url="", threshold=0):
     url = '/v3/classify'
     params = {'api_key': self.api_key, 'version': self.version}
 
-    if isinstance(classifier_ids, str):
+    if isinstance(classifier_ids, str) or isinstance(classifier_ids, unicode):
       classifier_ids = [classifier_ids]
     else:
       if not isinstance(classifier_ids, list):
@@ -98,15 +72,16 @@ class WatsonVisualRecognition:
 
     parameters = {
       'classifier_ids': classifier_ids,
-      'threshold': 0
+      'threshold': threshold,
+      'url': image_url
     }
 
     files = {
       'parameters': (None, json.dumps(parameters)),
-      'images_file': (image_file,
-                      open(image_file, 'rb').read(),
-                      'image/jpg')
     }
+
+    if image_file:
+      files['images_file'] = (None, image_file, 'image/jpg')
 
     return requests.post(self.end_point + url,
                          files=files,
@@ -121,12 +96,14 @@ def main():
 
   sdk_visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
   my_vr = WatsonVisualRecognition(api_key)
+
+  image_path = '/Users/joshuazheng/Downloads/Beagle_hero.jpg'
+  image_file = open('/Users/joshuazheng/Downloads/Beagle_hero.jpg').read()
+  image_url = 'http://www.sbarro.com/wp-content/uploads/2015/04/12-sbarro-spaghetti-meatballs.jpg'
+  classifier_id = 'dogs_2117373684'
+  pprint(my_vr.classify_image(classifier_id, image_file=None, image_url=image_url, threshold=0))
   
-
-  journal = open('bundles/moleskine/journaling.zip').read()
-  land = open('bundles/moleskine/journaling.zip').read()
-  neg = open('bundles/moleskine/negative.zip').read()
-
+  '''  
   pos_file_paths = ['bundles/moleskine/journaling.zip', 'bundles/moleskine/journaling.zip']
   neg_file_path = 'bundles/moleskine/negative.zip'
   pos_file_list = [journal, land]
@@ -134,15 +111,15 @@ def main():
   pos_names = ['journal', 'land']
 
   files = {
-    'negative_examples': neg,
-    'journal_positive_examples': journal,
-    'landscape_positive_examples': land
+    'negative_examples': open('bundles/moleskine/negative.zip').read(),
+    'journal_positive_examples': open('bundles/moleskine/journaling.zip').read(),
+    'landscape_positive_examples': open('bundles/moleskine/journaling.zip').read()
   }
 
   response = my_vr.create_classifier("mol_script_zipnew", files)
   #response = my_vr.create_classifier_from_file("mol_script_file1", pos_names, pos_file_list, neg_file_path)
-  #import pdb; pdb.set_trace()
-
+  import pdb; pdb.set_trace()
+  '''
 
   '''  
   classes = sdk_visual_recognition.list_classifiers()

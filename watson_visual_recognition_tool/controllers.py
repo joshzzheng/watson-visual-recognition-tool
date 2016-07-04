@@ -11,8 +11,8 @@ from watson_visual_recognition import WatsonVisualRecognition
 from watson_visual_recognition_tool import app
 
 api_key = app.config['API_KEY']
-sdk_visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
-my_visual_recognition = WatsonVisualRecognition(api_key)
+vr_sdk = VisualRecognitionV3('2016-05-20', api_key=api_key)
+my_vr = WatsonVisualRecognition(api_key)
 
 @app.route('/')
 def index(**kwargs):
@@ -20,13 +20,13 @@ def index(**kwargs):
 
 @app.route('/api/classifiers', methods=['GET'])
 def get_custom_classifiers():
-  classifiers = sdk_visual_recognition.list_classifiers()['classifiers']
+  classifiers = vr_sdk.list_classifiers()['classifiers']
   response = jsonify(classifiers)
   return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['GET'])
 def get_custom_classifier_detail(id):
-  classifier = sdk_visual_recognition.get_classifier(id)
+  classifier = vr_sdk.get_classifier(id)
   response = jsonify(classifier)
   return response, response.status_code
 
@@ -45,14 +45,36 @@ def create_custom_classifier():
     else:
       files[name + '_positive_examples'] = tf
 
-  new_classifier = sdk_visual_recognition.create_classifier(classifier_name, files)
+  new_classifier = my_vr.create_classifier(classifier_name, files)
   response = jsonify(new_classifier)
+  
+  return response, response.status_code
+
+@app.route('/api/classify', methods=['POST'])
+def classify_image():
+
+  classifier_id = request.form['classifier_id']
+  image_url = request.form['image_url']
+  
+  tf = None
+  if request.files:
+    tf = TemporaryFile()
+    request.files['file'].save(tf)
+    tf.seek(0)
+
+
+  result = my_vr.classify_image(classifier_ids=classifier_id,
+                                image_file=tf,
+                                image_url=image_url,
+                                threshold=0)
+  
+  response = jsonify(result)
   
   return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['DELETE'])
 def delete_custom_classifier(id):
-  response = my_visual_recognition.delete_classifier(id)
+  response = my_vr.delete_classifier(id)
   response = jsonify(response)
   return response, response.status_code
 
