@@ -1,7 +1,8 @@
 var React = require('react');
 var moment = require("moment");
 var $ = require("jquery");
-var ClassifyImage = require("./classifyImage")
+var ClassifyImage = require("./classifyImage");
+var request = require('superagent');
 
 var ClassList = React.createClass({
   render: function(){

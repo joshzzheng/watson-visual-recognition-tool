@@ -54,7 +54,10 @@ def create_custom_classifier():
 def classify_image():
 
   classifier_id = request.form['classifier_id']
-  image_url = request.form['image_url']
+
+  image_url = ''
+  if 'image_url' in request.form:
+    image_url = request.form['image_url']
   
   tf = None
   if request.files:
