@@ -128,7 +128,7 @@ var ClassifyImage = React.createClass({
 
     return (
       <div className="card-block">
-        <button className="btn btn-primary btn-sm" 
+        <button className="btn" 
                 style={buttonStyle}
                 onClick={this.classifyImage}>
           Classify Image</button>

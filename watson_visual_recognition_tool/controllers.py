@@ -11,7 +11,7 @@ from watson_visual_recognition import WatsonVisualRecognition
 from watson_visual_recognition_tool import app
 
 api_key = app.config['API_KEY']
-vr_sdk = VisualRecognitionV3('2016-05-20', api_key=api_key)
+sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
 my_vr = WatsonVisualRecognition(api_key)
 
 @app.route('/')
@@ -20,13 +20,13 @@ def index(**kwargs):
 
 @app.route('/api/classifiers', methods=['GET'])
 def get_custom_classifiers():
-  classifiers = vr_sdk.list_classifiers()['classifiers']
+  classifiers = my_vr.list_classifiers()
   response = jsonify(classifiers)
   return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['GET'])
 def get_custom_classifier_detail(id):
-  classifier = vr_sdk.get_classifier(id)
+  classifier = my_vr.get_classifier(id)
   response = jsonify(classifier)
   return response, response.status_code
 
@@ -64,7 +64,6 @@ def classify_image():
     tf = TemporaryFile()
     request.files['file'].save(tf)
     tf.seek(0)
-
 
   result = my_vr.classify_image(classifier_ids=classifier_id,
                                 image_file=tf,

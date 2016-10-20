@@ -7,6 +7,7 @@ import requests
 import tempfile
 
 class WatsonVisualRecognition:
+
   end_point = "https://gateway-a.watsonplatform.net/visual-recognition/api"
   latest_version = '2016-05-20'
   
@@ -23,8 +24,11 @@ class WatsonVisualRecognition:
                         params=params).json()['classifiers']
 
   def get_classifier(self, classifier_id):
-    url = '/v3/classifers'
+    url = '/v3/classifiers' + '/' + classifier_id
     params = {'api_key': self.api_key, 'version': self.version}
+
+    return requests.get(self.end_point + url,
+                        params=params).json()
 
   def create_classifier(self, classifier_name, class_files):
     url = '/v3/classifiers'
@@ -92,66 +96,51 @@ def main():
   load_dotenv(find_dotenv())
   api_key=os.environ.get("API_KEY")
 
-  #visual_recognition = VisualRecognition(api_key)
+  #visual_recognition = WatsonVisualRecognition(api_key)
 
-  sdk_visual_recognition = VisualRecognitionV3('2016-05-20', api_key=api_key)
+  sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
   my_vr = WatsonVisualRecognition(api_key)
-
+  
+  ''' 
   image_path = '/Users/joshuazheng/Downloads/Beagle_hero.jpg'
   image_file = open('/Users/joshuazheng/Downloads/Beagle_hero.jpg').read()
   image_url = 'http://www.sbarro.com/wp-content/uploads/2015/04/12-sbarro-spaghetti-meatballs.jpg'
   classifier_id = 'dogs_2117373684'
   pprint(my_vr.classify_image(classifier_id, image_file=None, image_url=image_url, threshold=0))
   
-  '''  
+   
   pos_file_paths = ['bundles/moleskine/journaling.zip', 'bundles/moleskine/journaling.zip']
   neg_file_path = 'bundles/moleskine/negative.zip'
   pos_file_list = [journal, land]
   pos_files = {'journ': journal, 'land': land}
   pos_names = ['journal', 'land']
+  
 
   files = {
-    'negative_examples': open('bundles/moleskine/negative.zip').read(),
-    'journal_positive_examples': open('bundles/moleskine/journaling.zip').read(),
-    'landscape_positive_examples': open('bundles/moleskine/journaling.zip').read()
+    'negative_examples': open('../bundles/moleskine/negative.zip').read(),
+    'journal_positive_examples': open('../bundles/moleskine/journaling.zip').read(),
+    'landscape_positive_examples': open('../bundles/moleskine/journaling.zip').read()
   }
 
   response = my_vr.create_classifier("mol_script_zipnew", files)
   #response = my_vr.create_classifier_from_file("mol_script_file1", pos_names, pos_file_list, neg_file_path)
-  import pdb; pdb.set_trace()
-  '''
-
-  '''  
-  classes = sdk_visual_recognition.list_classifiers()
-  pprint(classes)
-
+  #import pdb; pdb.set_trace()
+  print response
+  print(sdk_vr.get_classifier('beagle_81816899'))
   print
-  for c in classes['classifiers']:
-    info = sdk_visual_recognition.get_classifier(c['classifier_id'])
+  print "SDK"
+  classes = my_vr.list_classifiers()
+  pprint(classes)
+  print
+  print
+  for c in classes:
+    info = sdk_vr.get_classifier(c['classifier_id'])
     pprint(info)
     print
   '''
 
-  '''
-  #Single Classifier
-  pos_file = 'data/bundles/dogs/beagle.zip'
-  neg_file = 'data/bundles/dogs/negatives.zip'
-  #response = my_vr.create_classifier('beagle','beagle', pos_file, neg_file)
-
-  #Multi Classifier
-  tag_names = ['beagle', 'dalmation', 'golden_retriever','husky']
-  pos_files = ['data/bundles/dogs/beagle.zip', 'data/bundles/dogs/dalmation.zip', 
-               'data/bundles/dogs/goldenretriever.zip', 'data/bundles/dogs/husky.zip']
-  #response = my_vr.create_classifier('dogs',tag_names, pos_files, neg_file)
-  #print response
-
-  pprint(my_vr.list_classifiers())
-  print('')
-  pprint(my_vr.classify_image(['dogs_2117373684','beagle_81816899'], 'data/bundles/dogs/test/5.jpg'))
-  #pprint(my_vr.classify_image('default', 'bundles/dogs/test/0.jpg'))
-
-  #response = my_vr.delete_classifier('beagle_classifier_1962805094')
-  '''
+  print my_vr.get_classifier('piz_525944347')
+  
 
 if __name__ == "__main__":
     main()
