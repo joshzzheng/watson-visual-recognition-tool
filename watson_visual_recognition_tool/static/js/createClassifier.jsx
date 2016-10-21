@@ -44,8 +44,7 @@ var DropzoneButton = React.createClass({
 
 var ClassRow = React.createClass({
   getInitialState: function() {
-    return {
-    };
+    return {};
   },
 
   handleRowClassNameChange: function(e) {
@@ -54,13 +53,13 @@ var ClassRow = React.createClass({
   
   render: function() {
     return (
-      <div className="form-group row">
-        <label className="col-sm-2 form-control-label">
+      <div className="form-group">
+        <label className="col-sm-2 form-label">
           {this.props.classes[this.props.rowId].label}
         </label>
         <div className="col-sm-4">
           <input type="text" 
-                 className="form-control"
+                 className="form-input"
                  value={this.props.classes[this.props.rowId].name}
                  onChange={this.handleRowClassNameChange}
                  disabled={this.props.classes[this.props.rowId].disabled} />
@@ -154,34 +153,38 @@ var CreateClassifier = React.createClass({
     });
 
     return (
-      <form onSubmit={this.submitClassifier}>
-        <div className="form-group row">
-          <label className="col-sm-2 form-control-label">
-            Classifer Name
-          </label>
-          <div className="col-sm-5">
-            <input type="text" 
-                   className="form-control" 
-                   value={this.state.classifierName || ""}
-                   onChange={this.handleClassifierNameChange} />
+      <div>
+        <h2>Create New Classifer</h2>
+        <hr />
+        <form className="form-horizontal" onSubmit={this.submitClassifier}>
+          <div className="form-group">
+            <label className="col-sm-2 form-label">
+              Classifer Name
+            </label>
+            <div className="col-sm-5">
+              <input type="text" 
+                     className="form-input" 
+                     value={this.state.classifierName || ""}
+                     onChange={this.handleClassifierNameChange} />
+            </div>
           </div>
-        </div>
-        
-        {classRowList}
-        <button className="btn btn-primary"
-                onClick={this.addNewClass}>
-          Add Class
-        </button>
-        
-        <div className="form-group row">
-          <div className="col-sm-offset-2 col-sm-5">
-            <input className="btn btn-success" 
+          
+          {classRowList}
+          
+          <div className="row" style={{marginBottom: '2%'}}>
+            <button className="btn"
+                    onClick={this.addNewClass}>
+              Add Class
+            </button>
+          </div>
+
+          <div className="row">
+            <input className="btn btn-primary" 
                    type="submit" 
                    value="Create Classifer" />
           </div>
-        </div>
-      </form>
-
+        </form>
+      </div>
     );
   }
 });

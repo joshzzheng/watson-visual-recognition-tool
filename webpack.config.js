@@ -1,5 +1,5 @@
-//const ExtractTextPlugin = require('extract-text-webpack-plugin');
-//const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   entry: [
@@ -14,12 +14,16 @@ module.exports = {
   },
   devtool: 'source-map',
 
-  /*plugins: [
+  plugins: [
     new ExtractTextPlugin('app.css', { allChunks: true }),
     new webpack.ProvidePlugin({
       "window.Tether": "tether"
     }),
-  ],*/
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    })
+  ],
   resolve:{
     extensions: ['', '.js', '.jsx']
   },
