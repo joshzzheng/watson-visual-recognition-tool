@@ -27,7 +27,7 @@ var ApiKeyModal = React.createClass({
               <h4 className="modal-title">Please Enter Your Watson VR API Key:</h4>
             </div>
             <div className="modal-body">
-              <p>This app will not function without an Watson VR API key.</p>
+              <p>WARNING: This app will not function without an Watson VR API key.</p>
               <form id="api-key-form" role="form" action="#">
                 <div className="form-group">
                   <input 

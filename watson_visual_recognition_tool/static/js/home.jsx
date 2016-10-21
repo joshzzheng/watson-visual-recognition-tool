@@ -16,7 +16,6 @@ var Home = React.createClass({
           </button>
         </h4>
         <hr />
-        <h4>Your Classifiers:</h4>
         <CustomClassifierList url="/api/classifiers" apiKey={this.props.apiKey}/>
       </div>
     );

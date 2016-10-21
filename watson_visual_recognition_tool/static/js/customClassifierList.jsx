@@ -1,8 +1,8 @@
 var React = require('react');
 var moment = require("moment");
 var $ = require("jquery");
-var ClassifyImage = require("./classifyImage");
 var request = require('superagent');
+var ClassifyImage = require("./classifyImage");
 
 var ClassList = React.createClass({
   render: function(){
@@ -19,12 +19,13 @@ var ClassList = React.createClass({
   }
 });
 
-var CustomClassifier = React.createClass({
+var CustomClassifierDetails = React.createClass({
   loadClassifierFromServer: function(){
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       cache: false,
+      data: {apiKey: this.state.apiKey},
 
       success: function(data) {
         this.setState({classifier: data});
@@ -39,12 +40,16 @@ var CustomClassifier = React.createClass({
     return {
       classifier: {
         classes: []
-    }};
+      },
+      apiKey: this.props.apiKey
+    };
   },
 
-  componentDidMount: function() {
-    this.loadClassifierFromServer();
-    setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+  componentWillReceiveProps: function(nextProps) {
+    if(nextProps.apiKey !== null){
+      this.loadClassifierFromServer();
+      setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+    }
   },
 
   deleteClassifier: function(){
@@ -56,23 +61,12 @@ var CustomClassifier = React.createClass({
   },
 
   render: function() {
-    var cardStyle = {
-      maxWidth: '20rem',
-    };
-    var buttonStyle = {
-      marginRight: '2%'
-    }
-    var imageStyle = {
-      width: '100%',
-      height: 'auto'
-    }
-
     var date = moment(this.state.classifier.created)
                 .format("MMMM Do YYYY, h:mm a")
 
     return(
-      <div className="col-sm-6">
-        <div className="card" style={cardStyle}>
+      <div className="col-sm-3">
+        <div className="card" style={{maxWidth:'20rem'}}>
           <div className="card-block">
             <h4 className="card-title">{this.props.name}</h4>
             <p className="card-text">
@@ -99,10 +93,12 @@ var CustomClassifier = React.createClass({
 
 var CustomClassifiersList = React.createClass({
   loadClassifiersFromServer: function(){
+    console.log("RUNNING!")
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       cache: false,
+      data: {apiKey: this.state.apiKey},
       success: function(data) {
         this.setState({classifiers: data});
       }.bind(this),
@@ -113,31 +109,42 @@ var CustomClassifiersList = React.createClass({
   },
   
   getInitialState: function() {
-    return {classifiers: []};
+    return {
+      classifiers: [],
+      apiKey: this.props.apiKey
+    };
   },
 
-  componentDidMount: function() {
-    if (this.props.apiKey !== null) {
-      this.loadClassifiersFromServer();
+  componentWillReceiveProps: function(nextProps) {
+    if(nextProps.apiKey !== null){
+      console.log(nextProps)
+      this.setState({apiKey: nextProps.apiKey}, function(){
+         this.loadClassifiersFromServer();
+      })
     }
   },
 
   render: function() {
     var classifiers = [];
-    var divStyle = {
-      maxWidth: '30%',
-    };
+
+    var self = this;
     this.state.classifiers.forEach(function(classifier){
-      classifiers.push(<CustomClassifier
+      classifiers.push(<CustomClassifierDetails
          url = {'/api/classifier/' + classifier.classifier_id}
          pollInterval={200000}
          classifierID={classifier.classifier_id}
          name={classifier.name}
          status={classifier.status}
-         key={classifier.classifier_id} />);
+         key={classifier.classifier_id} 
+         apiKey={self.state.apiKey} />);
     });
     return (
       <div>
+        {
+          this.state.classifiers.length > 0 ? 
+            <h4>Your Classifiers:</h4> :
+            <h4>No classifiers found!</h4>
+        }
         <div className='row'>{classifiers}</div>
       </div>
     );

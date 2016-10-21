@@ -12,7 +12,7 @@ from watson_visual_recognition_tool import app
 
 api_key = app.config['API_KEY']
 sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
-my_vr = WatsonVisualRecognition(api_key)
+my_vr = WatsonVisualRecognition()
 
 @app.route('/')
 def index(**kwargs):
@@ -20,13 +20,15 @@ def index(**kwargs):
 
 @app.route('/api/classifiers', methods=['GET'])
 def get_custom_classifiers():
-  classifiers = my_vr.list_classifiers()
+  api_key = request.args.get('apiKey')
+  classifiers = my_vr.list_classifiers(api_key)
   response = jsonify(classifiers)
   return response, response.status_code
 
 @app.route('/api/classifier/<id>', methods=['GET'])
 def get_custom_classifier_detail(id):
-  classifier = my_vr.get_classifier(id)
+  api_key = request.args.get('apiKey')
+  classifier = my_vr.get_classifier(id, api_key)
   response = jsonify(classifier)
   return response, response.status_code
 
@@ -76,7 +78,8 @@ def classify_image():
 
 @app.route('/api/classifier/<id>', methods=['DELETE'])
 def delete_custom_classifier(id):
-  response = my_vr.delete_classifier(id)
+  api_key = request.args.get('apiKey')
+  response = my_vr.delete_classifier(id, api_key)
   response = jsonify(response)
   return response, response.status_code
 

@@ -7,21 +7,25 @@ class WatsonVisualRecognition:
   end_point = "https://gateway-a.watsonplatform.net/visual-recognition/api"
   latest_version = '2016-05-20'
   
-  def __init__(self, api_key, end_point=end_point, version=latest_version):
+  def __init__(self, end_point=end_point, version=latest_version, api_key=None):
     self.api_key = api_key
     self.end_point = end_point
     self.version = version
 
-  def list_classifiers(self):
+  def list_classifiers(self, api_key=None):
     url = '/v3/classifiers'
-    params = {'api_key': self.api_key, 'version': self.version}
+    params = {'api_key': api_key, 'version': self.version}
 
-    return requests.get(self.end_point + url, 
-                        params=params).json()['classifiers']
+    response = requests.get(self.end_point + url, 
+                        params=params)
 
-  def get_classifier(self, classifier_id):
+    if response.ok:
+      return response.json()['classifiers']
+    return []
+
+  def get_classifier(self, classifier_id, api_key=None):
     url = '/v3/classifiers' + '/' + classifier_id
-    params = {'api_key': self.api_key, 'version': self.version}
+    params = {'api_key': api_key, 'version': self.version}
 
     return requests.get(self.end_point + url,
                         params=params).json()
