@@ -2,51 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var CreateClassifier = require('./createClassifier');
 var Home = require('./home');
-
-var SideBar = React.createClass({
-  render: function() {
-    return (
-      <div id="sidebar-wrapper">
-        <ul className="nav nav-pills nav-stacked sidebar-nav" 
-            role="tablist">
-          <li className="nav-item sidebar-brand">
-            <a href="#">
-                Watson VR Tool
-            </a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link active" 
-                 data-toggle="tab" 
-                 role="tab" 
-                 href="#home">
-                Home
-              </a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link" 
-                 data-toggle="tab" 
-                 role="tab" 
-                 href="#create">
-                Create Classifier
-              </a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link" href="#classify">Classify Image</a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link" href="#similarity">Similarity Search</a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link" href="#">Collections</a>
-          </li>
-          <li className="nav-item">
-              <a className="nav-link" href="#">Cloudant</a>
-          </li>
-        </ul>
-      </div>
-    );
-  }
-});
+var SideBar = require('./sideBar');
+var ApiKeyModal = require('./apiKeyModal')
 
 var PageContent = React.createClass({
   render: function() {
@@ -73,66 +30,6 @@ var PageContent = React.createClass({
         </div>
       </div>
     );
-  }
-});
-
-var ApiKeyModal = React.createClass({
-  componentDidMount: function(){
-    $(ReactDOM.findDOMNode(this)).modal('show');
-    $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
-  },
-
-  saveApiKey: function(){
-    var key = ReactDOM.findDOMNode(this.refs.apiKey).value
-    this.props.setApiKey(key);
-  },
-
-  render: function(){
-    return (
-      <div className="modal fade">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" 
-                      className="close" 
-                      data-dismiss="modal" 
-                      aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 className="modal-title">Please Enter Your Watson VR API Key:</h4>
-            </div>
-            <div className="modal-body">
-              <p>This app will not function without an Watson VR API key.</p>
-              <form id="api-key-form" role="form" action="#">
-                <div className="form-group">
-                  <input 
-                    ref="apiKey"
-                    className="form-control" 
-                    type="text"
-                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" 
-                      className="btn btn-default" 
-                      data-dismiss="modal">
-                Close
-              </button>
-              <button type="button" 
-                      className="btn btn-primary"
-                      data-dismiss="modal"
-                      onClick={this.saveApiKey}>
-                Save key
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  propTypes:{
-    handleHideModal: React.PropTypes.func.isRequired
   }
 });
 

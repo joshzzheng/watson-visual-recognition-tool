@@ -117,7 +117,9 @@ var CustomClassifiersList = React.createClass({
   },
 
   componentDidMount: function() {
-    this.loadClassifiersFromServer();
+    if (this.props.apiKey !== null) {
+      this.loadClassifiersFromServer();
+    }
   },
 
   render: function() {
