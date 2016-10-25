@@ -3,3 +3,4 @@ applications:
 - name: visual-recognition-tool
   path: .
   memory: 512M
+  instances: 1
