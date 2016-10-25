@@ -10,8 +10,8 @@ from watson_visual_recognition import WatsonVisualRecognition
 
 from watson_visual_recognition_tool import app
 
-api_key = app.config['API_KEY']
-sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
+#api_key = app.config['API_KEY']
+#sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
 my_vr = WatsonVisualRecognition()
 
 @app.route('/')
