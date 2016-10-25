@@ -5,8 +5,6 @@ settings.py
 curl_commands
 *~
 node_modules
-browser-bundle.js
-browser-bundle.js.map
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
