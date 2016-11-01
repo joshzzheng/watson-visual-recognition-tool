@@ -12,11 +12,11 @@ var PageContent = React.createClass({
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-12">
-              <div className="container" 
-                   style={{marginTop: '3%'}}>
+              <div className="container" style={{marginTop: '3%'}}>
                 <div className="tab-content">
                   <div className="tab-pane active" id="home" role="tabpanel">
-                    <Home apiKey={this.props.apiKey} handleShowModal={this.props.handleShowModal} />
+                    <Home apiKey={this.props.apiKey} 
+                          handleShowModal={this.props.handleShowModal} />
                   </div>
                   <div className="tab-pane" id="create" role="tabpanel">
                     <CreateClassifier url="/api/classifiers" />
@@ -37,7 +37,7 @@ var App = React.createClass({
   getInitialState: function(){
     return {
       modalView: { showModal: true },
-      apiKey: null
+      apiKey: "2d7f02e6708f3562a043ebf31159ff849d94d123"
     }
   },
   handleHideModal: function(){

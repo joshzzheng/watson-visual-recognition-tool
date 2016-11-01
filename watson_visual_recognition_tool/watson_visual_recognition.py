@@ -48,9 +48,9 @@ class WatsonVisualRecognition:
                          params=params,
                         ).json()
 
-  def delete_classifier(self, classifier_id):
+  def delete_classifier(self, classifier_id, api_key=None):
     url = '/v3/classifiers/' + classifier_id
-    params = {'api_key': self.api_key, 'version': self.version}
+    params = {'api_key': api_key, 'version': self.version}
     response = requests.delete(self.end_point + url,
                            params=params).json()
     return requests.delete(self.end_point + url,
@@ -64,9 +64,9 @@ class WatsonVisualRecognition:
 
     return responses
 
-  def classify_image(self, classifier_ids, image_file=None, image_url="", threshold=0):
+  def classify_image(self, classifier_ids, image_file=None, image_url="", threshold=0, api_key=None):
     url = '/v3/classify'
-    params = {'api_key': self.api_key, 'version': self.version}
+    params = {'api_key': api_key, 'version': self.version}
 
     if isinstance(classifier_ids, str) or isinstance(classifier_ids, unicode):
       classifier_ids = [classifier_ids]

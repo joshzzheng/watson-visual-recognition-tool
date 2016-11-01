@@ -54,8 +54,8 @@ def create_custom_classifier():
 
 @app.route('/api/classify', methods=['POST'])
 def classify_image():
-
   classifier_id = request.form['classifier_id']
+  api_key = request.form['api_key']
 
   image_url = ''
   if 'image_url' in request.form:
@@ -70,7 +70,8 @@ def classify_image():
   result = my_vr.classify_image(classifier_ids=classifier_id,
                                 image_file=tf,
                                 image_url=image_url,
-                                threshold=0)
+                                threshold=0,
+                                api_key=api_key)
   
   response = jsonify(result)
   

@@ -4,10 +4,12 @@ var CustomClassifierList = require('./customClassifierList')
 
 var Home = React.createClass({
   render: function() {
+    console.log("RENDERING HOME")
     return (
       <div>
         <h2>Watson Visual Recognition Tool</h2>
-        <hr />
+        <div class="divider"></div>
+        
         <h4>
           API Key: {this.props.apiKey || "Unknown"} &nbsp;&nbsp;
           <button className="btn btn-default"
@@ -15,8 +17,14 @@ var Home = React.createClass({
             Update Key
           </button>
         </h4>
-        <hr />
-        <CustomClassifierList url="/api/classifiers" apiKey={this.props.apiKey}/>
+
+        <div class="divider"></div>
+        
+        <CustomClassifierList 
+          url="/api/classifiers" 
+          apiKey={this.props.apiKey}
+        />
+        
       </div>
     );
   }

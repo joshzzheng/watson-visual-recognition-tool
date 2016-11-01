@@ -14,8 +14,7 @@ var ResultList = React.createClass({
     })
     return (
       <div>
-        <h5>Result:</h5>
-        <ul className="list-group list-group-flush"> {resultList} </ul>
+        <ul> {resultList} </ul>
       </div>
     );
   }
@@ -43,18 +42,18 @@ var ImageDropzoneButton = React.createClass({
   },
 
   render: function () {
-    var dropzoneStyle = {
-      border: "dotted",
-      width: "100%",
-      marginBottom: "10px"
-    };
-
     return (
-      <Dropzone ref="dropzone" 
-                onDrop={this.onDrop} 
-                multiple={false}
-                className="btn btn-secondary"
-                style={dropzoneStyle}> 
+      <Dropzone 
+        ref="dropzone" 
+        onDrop={this.onDrop} 
+        multiple={false}
+        className="btn"
+        style={{
+          border: "dotted", 
+          height: "4rem",
+          lineHeight: "2rem",
+          marginBottom: "1rem"
+        }}> 
         {this.state.text}
       </Dropzone>
     );
@@ -67,7 +66,8 @@ var ClassifyImage = React.createClass({
       imageURL: "",
       imageFileName: "",
       imageFile: null,
-      results: []
+      results: [],
+      hasResults: false
     };
   },
 
@@ -101,6 +101,7 @@ var ClassifyImage = React.createClass({
     }
 
     req.field('classifier_id', this.props.classifierID);
+    req.field('api_key', this.props.apiKey);
     
     if (this.state.imageURL) {
       req.field('image_url', this.state.imageURL);
@@ -114,32 +115,31 @@ var ClassifyImage = React.createClass({
       newResults.sort(function(a, b) {
           return b.score - a.score;
       });
-      self.setState({results: newResults});
+      self.setState({results: newResults, hasResults: true});
       self.resetState();  
     });
-    
   },
 
   render: function () {
-    var buttonStyle = {
-      marginRight: '2%',
-      marginBottom: '5%'
-    }
-
     return (
-      <div className="card-block">
-        <button className="btn" 
-                style={buttonStyle}
-                onClick={this.classifyImage}>
-          Classify Image</button>
-        <ImageDropzoneButton addImageFile={this.addImageFile} />
-        <input type="text" 
-               className="form-control"
-               placeholder="Image URL"
-               value={this.state.imageURL}
-               onChange={this.handleImageURLChange} />
-        <hr />
-        <ResultList results={this.state.results} />
+      <div>
+        <div className="card-block">
+          <ImageDropzoneButton addImageFile={this.addImageFile} />
+          <br/>
+          <input type="text" 
+                 className="form-control"
+                 placeholder="Image URL"
+                 value={this.state.imageURL}
+                 onChange={this.handleImageURLChange} />
+          <br/>
+          <button className="btn btn-sm btn-primary" 
+                  onClick={this.classifyImage}>
+            Classify Image</button>
+        </div>
+        <div className="card-block">
+          {this.state.hasResults ? <h7>Result:</h7> : null}
+          <ResultList results={this.state.results} />
+        </div>
       </div>
     );
   }
