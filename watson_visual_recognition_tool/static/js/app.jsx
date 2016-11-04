@@ -10,7 +10,7 @@ import CreateClassifier from './createClassifier'
 var App = React.createClass({
   getInitialState: function(){
     return {
-      apiKey: "2d7f02e6708f3562a043ebf31159ff849d94d123"
+      apiKey: null
     }
   },
 
@@ -20,16 +20,21 @@ var App = React.createClass({
     })
   },
 
+  getApiKey: function() {
+    return this.state.apiKey;
+  }, 
+
   render: function(){
     const routes = (
       <Route path="/" 
-             component={Content}
-             setApiKey={this.setApiKey}
-             apiKey={this.state.apiKey}>
+             component={Content}>
         <IndexRoute component={Home} 
+                    getApiKey={this.getApiKey}
+                    setApiKey={this.setApiKey}
                     apiKey={this.state.apiKey}/>
         <Route path="/create" 
-               component={CreateClassifier} 
+               component={CreateClassifier}
+               url="/api/classifiers" 
                apiKey={this.state.apiKey}/>
         {/*<Route path="/collections" component={Collections}/>*/} 
         {/*<Route path="/similarity" component={Repos}/>*/} 

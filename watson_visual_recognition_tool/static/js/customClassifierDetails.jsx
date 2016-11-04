@@ -47,10 +47,17 @@ var CustomClassifierDetails = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    this.loadClassifierFromServer();
+    setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+  },
+
   componentWillReceiveProps: function(nextProps) {
     if(nextProps.apiKey !== null){
-      this.loadClassifierFromServer();
-      setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+      this.setState({apiKey: nextProps.apiKey}, function(){
+        this.loadClassifierFromServer();
+        setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+      });
     }
   },
 
@@ -77,6 +84,7 @@ var CustomClassifierDetails = React.createClass({
   },
 
   render: function() {
+
     var date = moment(this.state.classifier.created)
                 .format("MMMM Do YYYY, h:mm a")
 

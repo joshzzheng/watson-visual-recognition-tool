@@ -1,7 +1,7 @@
-var React = require('react');
-var Dropzone = require('react-dropzone');
-var request = require('superagent');
-var $ = require("jquery");
+import React from 'react'
+import Dropzone from 'react-dropzone'
+import request from 'superagent'
+import $ from "jquery"
 
 var DropzoneButton = React.createClass({
   getInitialState: function () {
@@ -124,8 +124,8 @@ var CreateClassifier = React.createClass({
   submitClassifier: function(e) {
     e.preventDefault();
     var self = this;
-    var req = request.post(this.props.url);
-    
+    var req = request.post(this.props.route.url);
+    console.log("URL: " + this.props.route.url)
     this.state.classes.map(function(c){
       req.attach(c.name, c.file);
     });

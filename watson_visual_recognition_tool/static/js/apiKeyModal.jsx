@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 var ApiKeyModal = React.createClass({
   componentDidMount: function(){
-    console.log("MODAL MOUNTED: " + this.props.showModal)
     $(ReactDOM.findDOMNode(this)).modal('show');
     $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
   },
@@ -36,8 +35,8 @@ var ApiKeyModal = React.createClass({
                     ref="apiKey"
                     className="form-control" 
                     type="text"
-                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
-                    value="2d7f02e6708f3562a043ebf31159ff849d94d123" />
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
                 </div>
               </form>
             </div>
