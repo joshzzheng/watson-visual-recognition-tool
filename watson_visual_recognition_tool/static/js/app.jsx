@@ -10,23 +10,8 @@ import CreateClassifier from './createClassifier'
 var App = React.createClass({
   getInitialState: function(){
     return {
-      apiKey: "2d7f02e6708f3562a043ebf31159ff849d94d123",
-      showModal: true
+      apiKey: "2d7f02e6708f3562a043ebf31159ff849d94d123"
     }
-  },
-
-  handleHideModal: function(){
-    this.setState({
-      showModal: false
-    });
-    console.log("HIDE MODAL: " + this.state.showModal);
-  },
-
-  handleShowModal: function(){
-    console.log("SHOW MODAL: " + this.state.showModal);
-    this.setState({
-      showModal: true
-    });
   },
 
   setApiKey: function(key) {
@@ -40,15 +25,12 @@ var App = React.createClass({
       <Route path="/" 
              component={Content}
              setApiKey={this.setApiKey}
-             apiKey={this.state.apiKey}
-             showModal={this.state.showModal}
-             handleHideModal={this.handleHideModal}>
+             apiKey={this.state.apiKey}>
         <IndexRoute component={Home} 
-                    apiKey={this.state.apiKey}
-                    handleShowModal={this.handleShowModal}/>
+                    apiKey={this.state.apiKey}/>
         <Route path="/create" 
                component={CreateClassifier} 
-               apiKey={this.state.apiKey} />
+               apiKey={this.state.apiKey}/>
         {/*<Route path="/collections" component={Collections}/>*/} 
         {/*<Route path="/similarity" component={Repos}/>*/} 
         {/*<Route path="/cloudant" component={About}/>*/}      

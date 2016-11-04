@@ -15,10 +15,10 @@ var Home = React.createClass({
                 
                 <h4>
                   API Key: {this.props.route.apiKey || "Unknown"} &nbsp;&nbsp;
-                  <button className="btn btn-default"
+                  {/*<button className="btn btn-default"
                           onClick={this.props.route.handleShowModal}>
                     Update Key
-                  </button>
+                  </button>*/}
                 </h4>
 
                 <div class="divider"></div>

@@ -8,13 +8,27 @@ import NavLink from './navLink'
 var Content = React.createClass({
   getInitialState: function() {
     return {
-      showModal: this.props.route.showModal
+      showModal: true
     };
   },
 
+  handleHideModal: function(){
+    this.setState({
+      showModal: false
+    });
+    console.log("HIDE MODAL: " + this.state.showModal);
+  },
+
+  handleShowModal: function(){
+    this.setState({
+      showModal: true
+    });
+    console.log("SHOW MODAL: " + this.state.showModal);
+  },
+
   componentWillReceiveProps: function(nextProps) {
-    {/*console.log(nextProps);*/}
-    this.setState({showModal: nextProps.showModal});
+    {/*console.log(nextProps);
+    this.setState({showModal: nextProps.showModal});*/}
     console.log("UPDATED: " + this.state.showModal);
   },
 
@@ -45,7 +59,7 @@ var Content = React.createClass({
           this.state.showModal ? 
             <ApiKeyModal
               showModal={this.state.showModal}
-              handleHideModal={this.props.route.handleHideModal}
+              handleHideModal={this.handleHideModal}
               setApiKey={this.props.route.setApiKey}
             /> 
             : null
