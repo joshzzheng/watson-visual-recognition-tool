@@ -1,7 +1,7 @@
-var React = require('react');
-var moment = require("moment");
-var $ = require("jquery");
-var CustomClassifierDetails = require('./CustomClassifierDetails')
+import React from 'react'
+import moment from "moment"
+import $ from "jquery"
+import CustomClassifierDetails from './CustomClassifierDetails'
 
 var CustomClassifiersList = React.createClass({
   loadClassifiersFromServer: function(){
@@ -27,6 +27,7 @@ var CustomClassifiersList = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
+    console.log("GETTING CLASSES")
     if(nextProps.apiKey !== null){
       this.setState({apiKey: nextProps.apiKey}, function(){
          this.loadClassifiersFromServer();
@@ -47,7 +48,8 @@ var CustomClassifiersList = React.createClass({
           name={classifier.name}
           status={classifier.status}
           key={classifier.classifier_id} 
-          apiKey={self.state.apiKey} />);
+          apiKey={self.state.apiKey} 
+        />);
     });
     return (
       <div>

@@ -24,6 +24,7 @@
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-dropzone": "^3.5.1",
+    "react-router": "^3.0.0",
     "resolve-url-loader": "^1.4.4",
     "sass-loader": "^3.2.1",
     "style-loader": "^0.13.1",

@@ -1,8 +1,9 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 var ApiKeyModal = React.createClass({
   componentDidMount: function(){
+    console.log("MODAL MOUNTED: " + this.props.showModal)
     $(ReactDOM.findDOMNode(this)).modal('show');
     $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
   },
@@ -10,6 +11,7 @@ var ApiKeyModal = React.createClass({
   saveApiKey: function(){
     var key = ReactDOM.findDOMNode(this.refs.apiKey).value
     this.props.setApiKey(key);
+    this.props.handleHideModal();
   },
 
   render: function(){
@@ -42,7 +44,8 @@ var ApiKeyModal = React.createClass({
             <div className="modal-footer">
               <button type="button" 
                       className="btn btn-default" 
-                      data-dismiss="modal">
+                      data-dismiss="modal"
+                      onClick={this.props.handleHideModal}>
                 Close
               </button>
               <button type="button" 
@@ -56,9 +59,6 @@ var ApiKeyModal = React.createClass({
         </div>
       </div>
     )
-  },
-  propTypes:{
-    handleHideModal: React.PropTypes.func.isRequired
   }
 });
 
