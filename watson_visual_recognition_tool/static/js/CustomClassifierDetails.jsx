@@ -8,7 +8,7 @@ import classNames from 'classnames'
 var DeleteButton = React.createClass({
   getInitialState: function(){
     return {
-      loading: false
+      pressed: false
     }
   },
 
@@ -17,14 +17,14 @@ var DeleteButton = React.createClass({
   },
 
   deleteClassifier: function(){
-    this.setState({loading: true}, function(){
+    this.setState({pressed: true}, function(){
       var req = request.del(this.props.url);
       var self = this;
 
       req.set('apiKey', this.props.apiKey)
       req.then(function(res, err){
         self.context.router.push('/');
-        self.setState({loading: false});
+        self.setState({pressed: false});
       });      
     })
   },
@@ -34,8 +34,8 @@ var DeleteButton = React.createClass({
       'btn': true,
       'btn-sm': true,
       'btn-block': true,
-      'disabled': this.state.loading,
-      'loading': this.state.loading
+      'disabled': this.state.pressed,
+      'loading': this.state.pressed
     });
 
     return (

@@ -1,14 +1,11 @@
 import React from 'react'
 import request from 'superagent'
 import $ from "jquery"
+import classNames from 'classnames'
 
 import DropzoneButton from './DropzoneButton'
 
 var ClassRow = React.createClass({
-  getInitialState: function() {
-    return {};
-  },
-
   handleRowClassNameChange: function(e) {
     this.props.handleClassNameChange(e, this.props.classes, this.props.rowId)
   },
@@ -32,7 +29,53 @@ var ClassRow = React.createClass({
       </div>
     )
   }
-})
+});
+
+var SubmitButton = React.createClass({
+  getInitialState: function() {
+    return {
+      pressed: false
+    };
+  },
+  
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
+  submitClassifier: function(e) {
+    this.setState({pressed: true}, function(){
+      var self = this;
+      var req = request.post(this.props.url);
+      var apiKey = this.props.getApiKey();
+
+      this.props.classes.map(function(c){
+        req.attach(c.name, c.file);
+      });
+
+      req.field('api_key', apiKey);
+      req.field('classifier_name', this.props.classifierName);
+      req.then(function(res, err){
+        self.context.router.push('/')
+      });
+    });
+  },
+
+  render: function() {
+    var btnClass = classNames({
+      'btn': true,
+      'btn-primary': true,
+      'disabled': this.state.pressed,
+      'loading': this.state.pressed
+    });
+
+    return (
+      <button className={btnClass}
+              onClick={this.submitClassifier}>
+        Create Classifer
+      </button>
+    )
+  }
+});
 
 var CreateClassifier = React.createClass({
   getInitialState: function() {
@@ -43,10 +86,6 @@ var CreateClassifier = React.createClass({
         {label: "Class 1", name: "", file: null, disabled: false}
       ]
     };
-  },
-  
-  contextTypes: {
-    router: React.PropTypes.object
   },
 
   resetState: function() {
@@ -87,26 +126,6 @@ var CreateClassifier = React.createClass({
     this.setState({classes: newClasses});
   },
 
-  submitClassifier: function(e) {
-    e.preventDefault();
-
-    var self = this;
-    var req = request.post(this.props.route.url);
-    var apiKey = this.props.route.getApiKey();
-
-    this.state.classes.map(function(c){
-      req.attach(c.name, c.file);
-    });
-
-    req.field('api_key', apiKey);
-    req.field('classifier_name', this.state.classifierName);
-    req.then(function(res, err){
-      console.log("SENT")
-      self.resetState();
-      self.context.router.push('/create')
-    });
-  },
-
   render() {
     var fileUploadStyle = {
       display: 'none'
@@ -131,7 +150,7 @@ var CreateClassifier = React.createClass({
               <div className="container">
                 <h2>Create New Classifer</h2>
                 <hr />
-                <form className="form-horizontal" onSubmit={this.submitClassifier}>
+                <form className="form-horizontal">
                   <div className="form-group">
                     <label className="col-sm-2 form-label">
                       Classifer Name
@@ -154,9 +173,11 @@ var CreateClassifier = React.createClass({
                   </div>
 
                   <div className="row">
-                    <input className="btn btn-primary" 
-                           type="submit" 
-                           value="Create Classifer" />
+                    <SubmitButton 
+                      url={this.props.route.url}
+                      getApiKey={this.props.route.getApiKey}
+                      classifierName={this.state.classifierName}
+                      classes={this.state.classes}/>
                   </div>
                 </form>
               </div>
