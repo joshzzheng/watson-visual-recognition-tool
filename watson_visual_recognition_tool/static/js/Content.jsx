@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
 
-import Home from './home'
-import CreateClassifier from './createClassifier'
-import NavLink from './navLink'
+import Home from './Home'
+import CreateClassifier from './CreateClassifier'
+import NavLink from './NavLink'
 
 var Content = React.createClass({
   render: function() {

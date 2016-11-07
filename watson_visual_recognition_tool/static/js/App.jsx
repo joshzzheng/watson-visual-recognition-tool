@@ -2,10 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
-import ApiKeyModal from './apiKeyModal'
-import Content from './content'
-import Home from './home'
-import CreateClassifier from './createClassifier'
+import ApiKeyModal from './ApiKeyModal'
+import Content from './Content'
+import Home from './Home'
+import CreateClassifier from './CreateClassifier'
 
 var App = React.createClass({
   getInitialState: function(){

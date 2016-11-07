@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import CustomClassifierList from './customClassifierList'
-import ApiKeyModal from './apiKeyModal'
+import CustomClassifierList from './CustomClassifierList'
+import ApiKeyModal from './ApiKeyModal'
 
 var Home = React.createClass({
   getInitialState: function() {

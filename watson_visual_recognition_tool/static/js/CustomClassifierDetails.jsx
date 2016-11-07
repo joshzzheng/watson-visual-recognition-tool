@@ -1,8 +1,8 @@
-import React 'react'
-import moment "moment"
-import $ "jquery"
-import request 'superagent'
-import ClassifyImage './classifyImage'
+import React from 'react'
+import moment from 'moment'
+import $ from 'jquery'
+import request from 'superagent'
+import ClassifyImage from './ClassifyImage'
 
 var ClassList = React.createClass({
   render: function(){
