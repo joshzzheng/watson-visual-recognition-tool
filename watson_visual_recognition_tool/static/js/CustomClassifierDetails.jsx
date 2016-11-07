@@ -49,14 +49,14 @@ var CustomClassifierDetails = React.createClass({
 
   componentDidMount: function() {
     this.loadClassifierFromServer();
-    setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+    {/*setInterval(this.loadClassifierFromServer, this.props.pollInterval);*/}
   },
 
   componentWillReceiveProps: function(nextProps) {
     if(nextProps.apiKey !== null){
       this.setState({apiKey: nextProps.apiKey}, function(){
         this.loadClassifierFromServer();
-        setInterval(this.loadClassifierFromServer, this.props.pollInterval);
+        {/*setInterval(this.loadClassifierFromServer, this.props.pollInterval);*/}
       });
     }
   },

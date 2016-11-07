@@ -30,9 +30,9 @@ class WatsonVisualRecognition:
     return requests.get(self.end_point + url,
                         params=params).json()
 
-  def create_classifier(self, classifier_name, class_files):
+  def create_classifier(self, classifier_name, class_files, api_key=None):
     url = '/v3/classifiers'
-    params = {'api_key': self.api_key, 'version': self.version}
+    params = {'api_key': api_key, 'version': self.version}
 
     files = {
       'name': (None, classifier_name)
@@ -47,22 +47,6 @@ class WatsonVisualRecognition:
                          files=files,
                          params=params,
                         ).json()
-
-  def delete_classifier(self, classifier_id, api_key=None):
-    url = '/v3/classifiers/' + classifier_id
-    params = {'api_key': api_key, 'version': self.version}
-    response = requests.delete(self.end_point + url,
-                           params=params).json()
-    return requests.delete(self.end_point + url,
-                           params=params).json()
-
-  def delete_all_classifiers(self):
-    responses = []
-    for classifier in self.list_classifiers():
-      r = self.delete_classifier(classifier['classifier_id'])
-      responses.append(r)
-
-    return responses
 
   def classify_image(self, classifier_ids, image_file=None, image_url="", threshold=0, api_key=None):
     url = '/v3/classify'
@@ -91,4 +75,11 @@ class WatsonVisualRecognition:
                          files=files,
                          params=params).json()
 
+  def delete_classifier(self, classifier_id, api_key=None):
+    url = '/v3/classifiers/' + classifier_id
+    params = {'api_key': api_key, 'version': self.version}
+    response = requests.delete(self.end_point + url,
+                           params=params).json()
+    return requests.delete(self.end_point + url,
+                           params=params).json()
 

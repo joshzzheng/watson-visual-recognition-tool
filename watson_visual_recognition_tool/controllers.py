@@ -35,6 +35,8 @@ def get_custom_classifier_detail(id):
 @app.route('/api/classifiers', methods=['POST'])
 def create_custom_classifier():
   classifier_name = request.form['classifier_name']
+  api_key = request.form['api_key']
+
   files = {}
 
   for name, file in request.files.iteritems():
@@ -47,7 +49,7 @@ def create_custom_classifier():
     else:
       files[name + '_positive_examples'] = tf
 
-  new_classifier = my_vr.create_classifier(classifier_name, files)
+  new_classifier = my_vr.create_classifier(classifier_name, files, api_key)
   response = jsonify(new_classifier)
   
   return response, response.status_code

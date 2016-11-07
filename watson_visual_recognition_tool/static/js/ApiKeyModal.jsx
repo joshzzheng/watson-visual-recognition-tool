@@ -36,6 +36,7 @@ var ApiKeyModal = React.createClass({
                     className="form-control" 
                     type="text"
                     placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    value="2d7f02e6708f3562a043ebf31159ff849d94d123"
                     />
                 </div>
               </form>

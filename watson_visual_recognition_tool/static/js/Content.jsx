@@ -25,6 +25,7 @@ var Content = React.createClass({
             <li><NavLink className="nav-link" to="/collection">Collections</NavLink></li>
             <li><NavLink className="nav-link" to="/similarity">Similarity Search</NavLink></li>
             <li><NavLink className="nav-link" to="/cloudant">Cloudant</NavLink></li>
+            <li><NavLink className="nav-link" to="/calculator">Pricing Calculator</NavLink></li>
           </ul>
         </div>
         {this.props.children}

@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
-import ApiKeyModal from './ApiKeyModal'
 import Content from './Content'
 import Home from './Home'
 import CreateClassifier from './CreateClassifier'
@@ -14,16 +13,16 @@ var App = React.createClass({
     }
   },
 
-  setApiKey: function(key) {
-    this.setState({
-      apiKey: key
-    })
-  },
-
   getApiKey: function() {
     return this.state.apiKey;
   }, 
 
+  setApiKey: function(key) {
+    this.setState({
+      apiKey: key
+    });
+  },
+  
   render: function(){
     const routes = (
       <Route path="/" 
@@ -34,8 +33,8 @@ var App = React.createClass({
                     apiKey={this.state.apiKey}/>
         <Route path="/create" 
                component={CreateClassifier}
-               url="/api/classifiers" 
-               apiKey={this.state.apiKey}/>
+               getApiKey={this.getApiKey}
+               url="/api/classifiers"/>
         {/*<Route path="/collections" component={Collections}/>*/} 
         {/*<Route path="/similarity" component={Repos}/>*/} 
         {/*<Route path="/cloudant" component={About}/>*/}      
