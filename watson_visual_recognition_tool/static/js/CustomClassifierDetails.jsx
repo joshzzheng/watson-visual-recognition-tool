@@ -93,13 +93,13 @@ var CustomClassifierDetails = React.createClass({
   },
   
   componentDidMount: function() {
-    this.loadClassifierDetailsFromServer();
+    {/*this.loadClassifierDetailsFromServer();*/}
   },
 
   componentWillReceiveProps: function(nextProps) {
-    this.setState({apiKey: nextProps.apiKey}, function(){
+    {/*this.setState({apiKey: nextProps.apiKey}, function(){
       this.loadClassifierDetailsFromServer();
-    });
+    });*/}
   },
 
   toggleClassifyImage: function(){
@@ -129,8 +129,8 @@ var CustomClassifierDetails = React.createClass({
             <p className="card-text">
               <b>ID:</b> {this.props.classifierID} <br/>
               <b>Status:</b> {this.props.status} <br/>
-              <b>Created:</b> {date} <br/>
-              <b>Owner:</b> {this.state.classifier.owner}
+              {/*<b>Created:</b> {date} <br/>
+              <b>Owner:</b> {this.state.classifier.owner || "None"}*/}
             </p>          
           </div>
           
