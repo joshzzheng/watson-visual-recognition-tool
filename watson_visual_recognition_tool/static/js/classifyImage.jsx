@@ -1,7 +1,7 @@
-var React = require('react');
-var Dropzone = require('react-dropzone');
-var request = require('superagent');
-var $ = require("jquery");
+import React from 'react'
+import Dropzone from 'react-dropzone'
+import request from 'superagent'
+import $ from "jquery"
 
 var ResultList = React.createClass({
   render: function(){
