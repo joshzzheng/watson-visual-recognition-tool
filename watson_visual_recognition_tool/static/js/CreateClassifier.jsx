@@ -44,6 +44,10 @@ var CreateClassifier = React.createClass({
       ]
     };
   },
+  
+  contextTypes: {
+    router: React.PropTypes.object
+  },
 
   resetState: function() {
     this.setState({
@@ -85,6 +89,7 @@ var CreateClassifier = React.createClass({
 
   submitClassifier: function(e) {
     e.preventDefault();
+
     var self = this;
     var req = request.post(this.props.route.url);
     var apiKey = this.props.route.getApiKey();
@@ -96,7 +101,9 @@ var CreateClassifier = React.createClass({
     req.field('api_key', apiKey);
     req.field('classifier_name', this.state.classifierName);
     req.then(function(res, err){
+      console.log("SENT")
       self.resetState();
+      self.context.router.push('/create')
     });
   },
 

@@ -81,7 +81,7 @@ def classify_image():
 
 @app.route('/api/classifier/<id>', methods=['DELETE'])
 def delete_custom_classifier(id):
-  api_key = request.args.get('apiKey')
+  api_key = request.headers.get('apiKey')
   response = my_vr.delete_classifier(id, api_key)
   response = jsonify(response)
   return response, response.status_code

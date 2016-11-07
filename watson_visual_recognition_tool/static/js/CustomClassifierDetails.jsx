@@ -3,6 +3,49 @@ import moment from 'moment'
 import $ from 'jquery'
 import request from 'superagent'
 import ClassifyImage from './ClassifyImage'
+import classNames from 'classnames'
+
+var DeleteButton = React.createClass({
+  getInitialState: function(){
+    return {
+      loading: false
+    }
+  },
+
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
+  deleteClassifier: function(){
+    this.setState({loading: true}, function(){
+      var req = request.del(this.props.url);
+      var self = this;
+
+      req.set('apiKey', this.props.apiKey)
+      req.then(function(res, err){
+        self.context.router.push('/');
+        self.setState({loading: false});
+      });      
+    })
+  },
+
+  render: function(){
+    var btnClass = classNames({
+      'btn': true,
+      'btn-sm': true,
+      'btn-block': true,
+      'disabled': this.state.loading,
+      'loading': this.state.loading
+    });
+
+    return (
+      <button className={btnClass}
+              onClick={this.deleteClassifier}>
+        Delete
+      </button>
+    )
+  }
+});
 
 var ClassList = React.createClass({
   render: function(){
@@ -14,18 +57,31 @@ var ClassList = React.createClass({
       );
     })
     return (
-      <ul className="list-group list-group-flush" style={{marginRight:'2em'}}> {classList} </ul>
+      <ul className="list-group list-group-flush" 
+          style={{marginRight:'2em'}}> 
+        {classList} 
+      </ul>
     );
   }
 });
 
 var CustomClassifierDetails = React.createClass({
-  loadClassifierFromServer: function(){
+  getInitialState: function() {
+    return {
+      classifier: {
+        classes: []
+      },
+      showClassifyImage: false,
+      classifyButtonText: "Show Classify Image"
+    };
+  },
+  
+  loadClassifierDetailsFromServer: function(){
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       cache: false,
-      data: {apiKey: this.state.apiKey},
+      data: {apiKey: this.props.apiKey},
 
       success: function(data) {
         this.setState({classifier: data});
@@ -36,29 +92,14 @@ var CustomClassifierDetails = React.createClass({
     });
   },
   
-  getInitialState: function() {
-    return {
-      classifier: {
-        classes: []
-      },
-      apiKey: this.props.apiKey,
-      showClassifyImage: false,
-      classifyButtonText: "Show Classify Image"
-    };
-  },
-
   componentDidMount: function() {
-    this.loadClassifierFromServer();
-    {/*setInterval(this.loadClassifierFromServer, this.props.pollInterval);*/}
+    this.loadClassifierDetailsFromServer();
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if(nextProps.apiKey !== null){
-      this.setState({apiKey: nextProps.apiKey}, function(){
-        this.loadClassifierFromServer();
-        {/*setInterval(this.loadClassifierFromServer, this.props.pollInterval);*/}
-      });
-    }
+    this.setState({apiKey: nextProps.apiKey}, function(){
+      this.loadClassifierDetailsFromServer();
+    });
   },
 
   toggleClassifyImage: function(){
@@ -73,14 +114,6 @@ var CustomClassifierDetails = React.createClass({
         classifyButtonText: "Hide Classify Image"
       });
     }
-  },
-
-  deleteClassifier: function(){
-    var req = request.delete(this.props.url);
-    var self = this;
-    req.then(function(res, err){
-      self.loadClassifierFromServer()
-    });
   },
 
   render: function() {
@@ -103,9 +136,9 @@ var CustomClassifierDetails = React.createClass({
           
           <ClassList classes={this.state.classifier.classes} />
           <div className="card-block">          
-            <button className="btn btn-sm btn-block"
-              onClick={this.deleteClassifier}>
-              Delete</button>
+            <DeleteButton 
+              url={this.props.url} 
+              apiKey={this.props.apiKey} />
           </div>
 
           <div className="card-block">
@@ -116,7 +149,7 @@ var CustomClassifierDetails = React.createClass({
                 {this.state.showClassifyImage ? 
                     <ClassifyImage url={'/api/classify'} 
                                    classifierID={this.props.classifierID}
-                                   apiKey={this.state.apiKey}/> 
+                                   apiKey={this.props.apiKey}/> 
                     : null}
           </div>
         </div>

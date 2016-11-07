@@ -46,7 +46,6 @@ var CustomClassifiersList = React.createClass({
       classifiers.push(
         <CustomClassifierDetails
           url = {'/api/classifier/' + classifier.classifier_id}
-          pollInterval={200000}
           classifierID={classifier.classifier_id}
           name={classifier.name}
           status={classifier.status}
