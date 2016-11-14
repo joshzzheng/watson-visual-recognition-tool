@@ -14,10 +14,6 @@ from watson_visual_recognition_tool import app
 #sdk_vr = VisualRecognitionV3('2016-05-20', api_key=api_key)
 my_vr = WatsonVisualRecognition()
 
-@app.route('/')
-def index(**kwargs):
-  return make_response(open('watson_visual_recognition_tool/templates/index.html').read())
-
 @app.route('/api/classifiers', methods=['GET'])
 def get_custom_classifiers():
   api_key = request.args.get('apiKey')
@@ -85,6 +81,11 @@ def delete_custom_classifier(id):
   response = my_vr.delete_classifier(id, api_key)
   response = jsonify(response)
   return response, response.status_code
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(**kwargs):
+  return make_response(open('watson_visual_recognition_tool/templates/index.html').read())
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')
