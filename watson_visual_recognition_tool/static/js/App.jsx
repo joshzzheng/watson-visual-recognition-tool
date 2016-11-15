@@ -49,5 +49,5 @@ var App = React.createClass({
 
 ReactDOM.render(
   <App />, 
-  document.getElementById("wrapper")
+  document.getElementById("main")
 );
