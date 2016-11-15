@@ -33,7 +33,6 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        //include: ['./watson_visual_recognition_tool/static/js'],
         query: {
           presets: ['es2015', 'react']
         }
